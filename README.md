@@ -53,7 +53,7 @@ flowchart LR
 | `data/model` | Clean domain models (`Recipe`, `DietaryAttributes`). |
 | `data/api` | `RecipeApi` contract, `LocalRecipeApi` (JSON-backed impl), `RecipeSearchQuery`, pure `RecipeFilter`, `AssetReader`. |
 | `data/api/dto` | Serialization DTOs + mappers to the domain model. |
-| `data/repository` | `RecipeRepository` — single source of truth for the UI. |
+| `data/repository` | `RecipeRepository`  single source of truth for the UI. |
 | `di` | Koin `appModule`. |
 | `ui/list` | List screen, search bar, filter sheet, `RecipeListViewModel`. |
 | `ui/detail` | Detail screen + `RecipeDetailViewModel`. |
@@ -63,7 +63,7 @@ flowchart LR
 
 ### Why this shape
 
-Even though data comes from a local file, the data layer is modeled as a suspendable, query-driven API (`RecipeApi.searchRecipes(query)`). Swapping the bundled JSON for a real backend is a one-line change in `di/AppModule.kt` — no UI or ViewModel changes required.
+Even though data comes from a local file, the data layer is modeled as a suspendable, query-driven API (`RecipeApi.searchRecipes(query)`). Swapping the bundled JSON for a real backend is a one-line change in `di/AppModule.kt`, no UI or ViewModel changes required.
 
 ## Key design decisions
 
@@ -71,7 +71,7 @@ Even though data comes from a local file, the data layer is modeled as a suspend
 - **Koin for DI.** Lightweight and idiomatic for a Compose app; no code generation. The detail ViewModel receives its recipe id as a Koin parameter from the navigation argument, keeping it free of navigation concerns.
 - **kotlinx.serialization** for JSON. No Retrofit/OkHttp are used for data, matching the "no real API call" constraint. A DTO layer keeps the JSON contract decoupled from the domain model.
 - **Search modeled as an endpoint.** `RecipeFilter` is a pure, framework-free object so the search semantics are unit-testable and identical to what a server-side search would return. Filtering runs off the main thread via the IO dispatcher.
-- **Coil 3** for image loading (crossfade, caching, placeholders) — the most idiomatic Compose image loader.
+- **Coil 3** for image loading (crossfade, caching, placeholders) the most idiomatic Compose image loader.
 - **Native Compose motion** (no extra animation SDK): `SharedTransitionLayout` for the list→detail hero transition, `animateItem()` for grid changes, press-scale on cards, and nav fade/slide transitions. Search input is debounced (250 ms) so results update smoothly while typing.
 
 ## Filter semantics
