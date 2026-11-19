@@ -1,0 +1,341 @@
+{
+  "recipes": [
+    {
+      "id": "r1",
+      "title": "Classic Margherita Pizza",
+      "description": "A simple Neapolitan-style pizza with San Marzano tomatoes, fresh mozzarella, and basil.",
+      "servings": 2,
+      "imageUrl": "https://picsum.photos/seed/margherita/800/600",
+      "ingredients": [
+        "250g pizza dough",
+        "100g San Marzano tomatoes",
+        "125g fresh mozzarella",
+        "Fresh basil leaves",
+        "2 tbsp olive oil",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Preheat your oven to its highest setting with a pizza stone inside.",
+        "Stretch the dough into a 10-inch round on a floured surface.",
+        "Spread crushed tomatoes over the base, leaving a border for the crust.",
+        "Tear the mozzarella and distribute evenly, then drizzle with olive oil.",
+        "Bake for 7-9 minutes until the crust is blistered and golden.",
+        "Top with fresh basil and a pinch of salt before serving."
+      ],
+      "dietary": { "vegetarian": true, "vegan": false, "glutenFree": false, "dairyFree": false }
+    },
+    {
+      "id": "r2",
+      "title": "Thai Green Curry with Chicken",
+      "description": "Fragrant coconut curry with tender chicken, Thai basil, and crisp vegetables.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/greencurry/800/600",
+      "ingredients": [
+        "500g chicken thigh, sliced",
+        "3 tbsp green curry paste",
+        "400ml coconut milk",
+        "1 zucchini, sliced",
+        "1 red bell pepper, sliced",
+        "Thai basil leaves",
+        "2 tbsp fish sauce",
+        "1 tsp palm sugar"
+      ],
+      "instructions": [
+        "Fry the curry paste in a splash of coconut milk until fragrant.",
+        "Add the chicken and cook until it changes color.",
+        "Pour in the remaining coconut milk and bring to a gentle simmer.",
+        "Add the vegetables and cook until just tender.",
+        "Season with fish sauce and palm sugar, then stir through the basil.",
+        "Serve hot with steamed jasmine rice."
+      ],
+      "dietary": { "vegetarian": false, "vegan": false, "glutenFree": true, "dairyFree": true }
+    },
+    {
+      "id": "r3",
+      "title": "Chickpea & Spinach Stew",
+      "description": "A hearty, budget-friendly vegan stew with warming spices and plenty of greens.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/chickpea/800/600",
+      "ingredients": [
+        "2 cans chickpeas, drained",
+        "200g fresh spinach",
+        "1 onion, diced",
+        "3 cloves garlic, minced",
+        "400g chopped tomatoes",
+        "1 tsp smoked paprika",
+        "1 tsp ground cumin",
+        "2 tbsp olive oil"
+      ],
+      "instructions": [
+        "Soften the onion and garlic in olive oil over medium heat.",
+        "Stir in the paprika and cumin and toast for 30 seconds.",
+        "Add the tomatoes and chickpeas and simmer for 15 minutes.",
+        "Fold in the spinach until wilted.",
+        "Season to taste and serve with crusty bread."
+      ],
+      "dietary": { "vegetarian": true, "vegan": true, "glutenFree": true, "dairyFree": true }
+    },
+    {
+      "id": "r4",
+      "title": "Beef Bolognese",
+      "description": "A slow-simmered Italian ragu rich with beef, tomatoes, and red wine.",
+      "servings": 6,
+      "imageUrl": "https://picsum.photos/seed/bolognese/800/600",
+      "ingredients": [
+        "500g ground beef",
+        "1 onion, finely diced",
+        "2 carrots, finely diced",
+        "2 celery stalks, finely diced",
+        "400g chopped tomatoes",
+        "150ml red wine",
+        "2 tbsp tomato paste",
+        "500g tagliatelle"
+      ],
+      "instructions": [
+        "Sweat the onion, carrot, and celery until soft.",
+        "Increase the heat and brown the beef thoroughly.",
+        "Stir in the tomato paste and cook for 2 minutes.",
+        "Deglaze with red wine and let it reduce by half.",
+        "Add the tomatoes, then simmer gently for at least 90 minutes.",
+        "Toss with cooked tagliatelle and serve with grated parmesan."
+      ],
+      "dietary": { "vegetarian": false, "vegan": false, "glutenFree": false, "dairyFree": true }
+    },
+    {
+      "id": "r5",
+      "title": "Avocado & Black Bean Tacos",
+      "description": "Fresh, zesty tacos layered with smoky black beans and creamy avocado.",
+      "servings": 3,
+      "imageUrl": "https://picsum.photos/seed/tacos/800/600",
+      "ingredients": [
+        "6 corn tortillas",
+        "1 can black beans, drained",
+        "2 ripe avocados",
+        "1 lime, juiced",
+        "1 small red onion, diced",
+        "Fresh cilantro",
+        "1 tsp smoked paprika",
+        "Salt to taste"
+      ],
+      "instructions": [
+        "Warm the black beans with smoked paprika and a splash of water.",
+        "Mash the avocado with lime juice and salt.",
+        "Char the tortillas directly over a flame or in a dry pan.",
+        "Layer beans and avocado onto each tortilla.",
+        "Top with red onion and cilantro and serve immediately."
+      ],
+      "dietary": { "vegetarian": true, "vegan": true, "glutenFree": true, "dairyFree": true }
+    },
+    {
+      "id": "r6",
+      "title": "Lemon Herb Roast Chicken",
+      "description": "A whole roast chicken with bright lemon, garlic, and fresh herbs.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/roastchicken/800/600",
+      "ingredients": [
+        "1 whole chicken (1.5kg)",
+        "1 lemon, halved",
+        "4 cloves garlic",
+        "2 tbsp butter, softened",
+        "Fresh thyme and rosemary",
+        "Salt and black pepper"
+      ],
+      "instructions": [
+        "Preheat the oven to 200C (400F).",
+        "Rub the chicken all over with butter, salt, and pepper.",
+        "Stuff the cavity with lemon, garlic, and herbs.",
+        "Roast for about 75 minutes, basting halfway through.",
+        "Rest for 15 minutes before carving."
+      ],
+      "dietary": { "vegetarian": false, "vegan": false, "glutenFree": true, "dairyFree": false }
+    },
+    {
+      "id": "r7",
+      "title": "Overnight Oats with Berries",
+      "description": "A no-cook breakfast of creamy oats soaked overnight and topped with berries.",
+      "servings": 1,
+      "imageUrl": "https://picsum.photos/seed/oats/800/600",
+      "ingredients": [
+        "50g rolled oats",
+        "120ml milk of choice",
+        "2 tbsp yogurt",
+        "1 tbsp chia seeds",
+        "1 tsp honey",
+        "Handful mixed berries"
+      ],
+      "instructions": [
+        "Combine oats, milk, yogurt, chia seeds, and honey in a jar.",
+        "Stir well and seal the jar.",
+        "Refrigerate overnight or for at least 4 hours.",
+        "Top with fresh berries before eating."
+      ],
+      "dietary": { "vegetarian": true, "vegan": false, "glutenFree": true, "dairyFree": false }
+    },
+    {
+      "id": "r8",
+      "title": "Spicy Tofu Stir-Fry",
+      "description": "Crispy tofu tossed with crunchy vegetables in a fiery garlic-chili sauce.",
+      "servings": 2,
+      "imageUrl": "https://picsum.photos/seed/tofu/800/600",
+      "ingredients": [
+        "300g firm tofu, cubed",
+        "2 tbsp soy sauce",
+        "1 tbsp chili garlic sauce",
+        "1 broccoli head, in florets",
+        "1 carrot, julienned",
+        "2 tbsp vegetable oil",
+        "1 tsp sesame oil"
+      ],
+      "instructions": [
+        "Press the tofu to remove excess water, then cube it.",
+        "Fry the tofu in vegetable oil until golden on all sides.",
+        "Add the vegetables and stir-fry over high heat for 3 minutes.",
+        "Stir in soy sauce and chili garlic sauce to coat.",
+        "Finish with a drizzle of sesame oil and serve over rice."
+      ],
+      "dietary": { "vegetarian": true, "vegan": true, "glutenFree": false, "dairyFree": true }
+    },
+    {
+      "id": "r9",
+      "title": "Classic Beef Burger",
+      "description": "A juicy homemade beef burger with melted cheese and all the trimmings.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/burger/800/600",
+      "ingredients": [
+        "600g ground beef",
+        "4 burger buns",
+        "4 slices cheddar cheese",
+        "1 tomato, sliced",
+        "Lettuce leaves",
+        "1 red onion, sliced",
+        "Salt and pepper"
+      ],
+      "instructions": [
+        "Divide the beef into 4 patties and season generously.",
+        "Sear in a hot pan for 3-4 minutes per side.",
+        "Add a slice of cheese to each patty and let it melt.",
+        "Toast the buns lightly.",
+        "Assemble with lettuce, tomato, and onion and serve."
+      ],
+      "dietary": { "vegetarian": false, "vegan": false, "glutenFree": false, "dairyFree": false }
+    },
+    {
+      "id": "r10",
+      "title": "Mushroom Risotto",
+      "description": "A creamy, comforting risotto with mixed mushrooms and parmesan.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/risotto/800/600",
+      "ingredients": [
+        "300g arborio rice",
+        "400g mixed mushrooms, sliced",
+        "1 onion, finely diced",
+        "150ml white wine",
+        "1L vegetable stock, warm",
+        "50g parmesan, grated",
+        "2 tbsp butter"
+      ],
+      "instructions": [
+        "Saute the mushrooms until golden, then set aside.",
+        "Soften the onion in butter, then add the rice and toast briefly.",
+        "Deglaze with white wine and stir until absorbed.",
+        "Add the warm stock a ladle at a time, stirring constantly.",
+        "When the rice is creamy and al dente, stir in mushrooms and parmesan.",
+        "Rest for 2 minutes, then serve."
+      ],
+      "dietary": { "vegetarian": true, "vegan": false, "glutenFree": true, "dairyFree": false }
+    },
+    {
+      "id": "r11",
+      "title": "Salmon Teriyaki Bowl",
+      "description": "Glazed salmon over rice with edamame and a glossy teriyaki sauce.",
+      "servings": 2,
+      "imageUrl": "https://picsum.photos/seed/salmon/800/600",
+      "ingredients": [
+        "2 salmon fillets",
+        "3 tbsp soy sauce",
+        "2 tbsp mirin",
+        "1 tbsp honey",
+        "200g cooked rice",
+        "100g edamame",
+        "1 tsp sesame seeds"
+      ],
+      "instructions": [
+        "Whisk soy sauce, mirin, and honey into a glaze.",
+        "Sear the salmon skin-side down until crisp.",
+        "Flip, add the glaze, and spoon over the fish until sticky.",
+        "Serve over rice with edamame and a sprinkle of sesame seeds."
+      ],
+      "dietary": { "vegetarian": false, "vegan": false, "glutenFree": false, "dairyFree": true }
+    },
+    {
+      "id": "r12",
+      "title": "Greek Salad",
+      "description": "A crisp, refreshing salad with cucumber, tomato, olives, and feta.",
+      "servings": 4,
+      "imageUrl": "https://picsum.photos/seed/greeksalad/800/600",
+      "ingredients": [
+        "4 tomatoes, wedged",
+        "1 cucumber, chunked",
+        "1 red onion, thinly sliced",
+        "100g kalamata olives",
+        "200g feta cheese",
+        "3 tbsp olive oil",
+        "1 tsp dried oregano"
+      ],
+      "instructions": [
+        "Combine the tomatoes, cucumber, onion, and olives in a bowl.",
+        "Drizzle with olive oil and sprinkle with oregano.",
+        "Top with a slab of feta.",
+        "Toss gently at the table and serve."
+      ],
+      "dietary": { "vegetarian": true, "vegan": false, "glutenFree": true, "dairyFree": false }
+    },
+    {
+      "id": "r13",
+      "title": "Banana Oat Pancakes",
+      "description": "Fluffy flourless pancakes sweetened naturally with ripe banana.",
+      "servings": 2,
+      "imageUrl": "https://picsum.photos/seed/pancakes/800/600",
+      "ingredients": [
+        "2 ripe bananas",
+        "2 eggs",
+        "80g rolled oats",
+        "1 tsp baking powder",
+        "1/2 tsp cinnamon",
+        "Butter for the pan"
+      ],
+      "instructions": [
+        "Blend the bananas, eggs, oats, baking powder, and cinnamon until smooth.",
+        "Let the batter rest for 5 minutes.",
+        "Cook spoonfuls in a buttered pan until bubbles form.",
+        "Flip and cook until golden.",
+        "Serve with maple syrup and extra banana."
+      ],
+      "dietary": { "vegetarian": true, "vegan": false, "glutenFree": true, "dairyFree": false }
+    },
+    {
+      "id": "r14",
+      "title": "Roasted Vegetable Buddha Bowl",
+      "description": "A nourishing bowl of roasted veg, quinoa, and lemon-tahini dressing.",
+      "servings": 2,
+      "imageUrl": "https://picsum.photos/seed/buddhabowl/800/600",
+      "ingredients": [
+        "150g quinoa",
+        "1 sweet potato, cubed",
+        "1 can chickpeas, drained",
+        "1 red onion, wedged",
+        "2 tbsp tahini",
+        "1 lemon, juiced",
+        "2 tbsp olive oil"
+      ],
+      "instructions": [
+        "Roast the sweet potato, chickpeas, and onion with olive oil at 200C for 25 minutes.",
+        "Cook the quinoa according to package instructions.",
+        "Whisk the tahini and lemon juice with a little water into a dressing.",
+        "Assemble the quinoa and roasted vegetables in a bowl.",
+        "Drizzle with the lemon-tahini dressing and serve."
+      ],
+      "dietary": { "vegetarian": true, "vegan": true, "glutenFree": true, "dairyFree": true }
+    }
+  ]
+}
