@@ -11,7 +11,9 @@ data class RecipeListUiState(
     val errorMessage: String? = null,
     val searchText: String = "",
     val filters: RecipeFilters = RecipeFilters(),
+    val layoutMode: RecipeLayoutMode = RecipeLayoutMode.Grid,
 ) {
+    //todo: solve not used problem
     val hasQuery: Boolean get() = searchText.isNotBlank() || filters.hasAny
 
     /** True when a successful load returned no matches (as opposed to loading). */

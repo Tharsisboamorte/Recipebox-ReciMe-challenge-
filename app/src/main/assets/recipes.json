@@ -5,7 +5,7 @@
       "title": "Classic Margherita Pizza",
       "description": "A simple Neapolitan-style pizza with San Marzano tomatoes, fresh mozzarella, and basil.",
       "servings": 2,
-      "imageUrl": "https://picsum.photos/seed/margherita/800/600",
+      "imageUrl": "https://picsum.photos/seed/margherita/400/500",
       "ingredients": [
         "250g pizza dough",
         "100g San Marzano tomatoes",
@@ -29,7 +29,7 @@
       "title": "Thai Green Curry with Chicken",
       "description": "Fragrant coconut curry with tender chicken, Thai basil, and crisp vegetables.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/greencurry/800/600",
+      "imageUrl": "https://picsum.photos/seed/greencurry/400/500",
       "ingredients": [
         "500g chicken thigh, sliced",
         "3 tbsp green curry paste",
@@ -55,7 +55,7 @@
       "title": "Chickpea & Spinach Stew",
       "description": "A hearty, budget-friendly vegan stew with warming spices and plenty of greens.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/chickpea/800/600",
+      "imageUrl": "https://picsum.photos/seed/chickpea/400/500",
       "ingredients": [
         "2 cans chickpeas, drained",
         "200g fresh spinach",
@@ -80,7 +80,7 @@
       "title": "Beef Bolognese",
       "description": "A slow-simmered Italian ragu rich with beef, tomatoes, and red wine.",
       "servings": 6,
-      "imageUrl": "https://picsum.photos/seed/bolognese/800/600",
+      "imageUrl": "https://picsum.photos/seed/bolognese/400/500",
       "ingredients": [
         "500g ground beef",
         "1 onion, finely diced",
@@ -106,7 +106,7 @@
       "title": "Avocado & Black Bean Tacos",
       "description": "Fresh, zesty tacos layered with smoky black beans and creamy avocado.",
       "servings": 3,
-      "imageUrl": "https://picsum.photos/seed/tacos/800/600",
+      "imageUrl": "https://picsum.photos/seed/tacos/400/500",
       "ingredients": [
         "6 corn tortillas",
         "1 can black beans, drained",
@@ -131,7 +131,7 @@
       "title": "Lemon Herb Roast Chicken",
       "description": "A whole roast chicken with bright lemon, garlic, and fresh herbs.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/roastchicken/800/600",
+      "imageUrl": "https://picsum.photos/seed/roastchicken/400/500",
       "ingredients": [
         "1 whole chicken (1.5kg)",
         "1 lemon, halved",
@@ -154,7 +154,7 @@
       "title": "Overnight Oats with Berries",
       "description": "A no-cook breakfast of creamy oats soaked overnight and topped with berries.",
       "servings": 1,
-      "imageUrl": "https://picsum.photos/seed/oats/800/600",
+      "imageUrl": "https://picsum.photos/seed/oats/400/500",
       "ingredients": [
         "50g rolled oats",
         "120ml milk of choice",
@@ -176,7 +176,7 @@
       "title": "Spicy Tofu Stir-Fry",
       "description": "Crispy tofu tossed with crunchy vegetables in a fiery garlic-chili sauce.",
       "servings": 2,
-      "imageUrl": "https://picsum.photos/seed/tofu/800/600",
+      "imageUrl": "https://picsum.photos/seed/tofu/400/500",
       "ingredients": [
         "300g firm tofu, cubed",
         "2 tbsp soy sauce",
@@ -200,7 +200,7 @@
       "title": "Classic Beef Burger",
       "description": "A juicy homemade beef burger with melted cheese and all the trimmings.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/burger/800/600",
+      "imageUrl": "https://picsum.photos/seed/burger/400/500",
       "ingredients": [
         "600g ground beef",
         "4 burger buns",
@@ -224,7 +224,7 @@
       "title": "Mushroom Risotto",
       "description": "A creamy, comforting risotto with mixed mushrooms and parmesan.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/risotto/800/600",
+      "imageUrl": "https://picsum.photos/seed/risotto/400/500",
       "ingredients": [
         "300g arborio rice",
         "400g mixed mushrooms, sliced",
@@ -249,7 +249,7 @@
       "title": "Salmon Teriyaki Bowl",
       "description": "Glazed salmon over rice with edamame and a glossy teriyaki sauce.",
       "servings": 2,
-      "imageUrl": "https://picsum.photos/seed/salmon/800/600",
+      "imageUrl": "https://picsum.photos/seed/salmon/400/500",
       "ingredients": [
         "2 salmon fillets",
         "3 tbsp soy sauce",
@@ -272,7 +272,7 @@
       "title": "Greek Salad",
       "description": "A crisp, refreshing salad with cucumber, tomato, olives, and feta.",
       "servings": 4,
-      "imageUrl": "https://picsum.photos/seed/greeksalad/800/600",
+      "imageUrl": "https://picsum.photos/seed/greeksalad/400/500",
       "ingredients": [
         "4 tomatoes, wedged",
         "1 cucumber, chunked",
@@ -295,7 +295,7 @@
       "title": "Banana Oat Pancakes",
       "description": "Fluffy flourless pancakes sweetened naturally with ripe banana.",
       "servings": 2,
-      "imageUrl": "https://picsum.photos/seed/pancakes/800/600",
+      "imageUrl": "https://picsum.photos/seed/pancakes/400/500",
       "ingredients": [
         "2 ripe bananas",
         "2 eggs",
@@ -318,7 +318,7 @@
       "title": "Roasted Vegetable Buddha Bowl",
       "description": "A nourishing bowl of roasted veg, quinoa, and lemon-tahini dressing.",
       "servings": 2,
-      "imageUrl": "https://picsum.photos/seed/buddhabowl/800/600",
+      "imageUrl": "https://picsum.photos/seed/buddhabowl/400/500",
       "ingredients": [
         "150g quinoa",
         "1 sweet potato, cubed",

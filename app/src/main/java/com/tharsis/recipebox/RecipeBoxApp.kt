@@ -1,6 +1,10 @@
 package com.tharsis.recipebox
 
 import android.app.Application
+import coil3.ImageLoader
+import coil3.SingletonImageLoader
+import coil3.memory.MemoryCache
+import coil3.request.crossfade
 import com.tharsis.recipebox.di.appModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -14,6 +18,16 @@ import org.koin.core.logger.Level
 class RecipeBoxApp : Application() {
     override fun onCreate() {
         super.onCreate()
+        SingletonImageLoader.setSafe { context ->
+            ImageLoader.Builder(context)
+                .memoryCache {
+                    MemoryCache.Builder()
+                        .maxSizePercent(context, 0.15)
+                        .build()
+                }
+                .crossfade(180)
+                .build()
+        }
         startKoin {
             androidLogger(Level.ERROR)
             androidContext(this@RecipeBoxApp)

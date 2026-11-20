@@ -30,6 +30,7 @@ class RecipeListViewModel(
 
     private val searchText = MutableStateFlow("")
     private val filters = MutableStateFlow(RecipeFilters())
+    private val layoutMode = MutableStateFlow(RecipeLayoutMode.Grid)
     private val refreshTrigger = MutableStateFlow(0)
 
     private val loadState: Flow<LoadState> =
@@ -48,13 +49,14 @@ class RecipeListViewModel(
             .onStart { emit(LoadState.Loading) }
 
     val uiState: StateFlow<RecipeListUiState> =
-        combine(loadState, searchText, filters) { state, text, activeFilters ->
+        combine(loadState, searchText, filters, layoutMode) { state, text, activeFilters, layout ->
             RecipeListUiState(
                 isLoading = state is LoadState.Loading,
                 recipes = (state as? LoadState.Success)?.recipes.orEmpty(),
                 errorMessage = (state as? LoadState.Error)?.message,
                 searchText = text,
                 filters = activeFilters,
+                layoutMode = layout,
             )
         }.stateIn(
             scope = viewModelScope,
@@ -76,6 +78,12 @@ class RecipeListViewModel(
 
     fun clearSearchText() {
         searchText.value = ""
+    }
+
+    fun toggleLayoutMode() {
+        layoutMode.update { current ->
+            if (current == RecipeLayoutMode.Grid) RecipeLayoutMode.List else RecipeLayoutMode.Grid
+        }
     }
 
     fun retry() {
