@@ -23,14 +23,14 @@ object RecipeSharedKeys {
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun sharedElementModifier(
+fun Modifier.sharedElementModifier(
     sharedScope: SharedTransitionScope?,
     animatedScope: AnimatedVisibilityScope?,
     key: String,
 ): Modifier {
-    if (sharedScope == null || animatedScope == null) return Modifier
+    if (sharedScope == null || animatedScope == null) return this
     return with(sharedScope) {
-        Modifier.sharedElement(
+        this@sharedElementModifier.sharedElement(
             rememberSharedContentState(key = key),
             animatedVisibilityScope = animatedScope,
         )

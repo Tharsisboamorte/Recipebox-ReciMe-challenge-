@@ -72,12 +72,10 @@ fun RecipeCard(
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
                     .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
-                    .then(
-                        sharedElementModifier(
-                            sharedScope = sharedScope,
-                            animatedScope = animatedScope,
-                            key = RecipeSharedKeys.image(recipe.id),
-                        ),
+                    .sharedElementModifier(
+                        sharedScope = sharedScope,
+                        animatedScope = animatedScope,
+                        key = RecipeSharedKeys.image(recipe.id),
                     ),
             )
             Column(modifier = Modifier.padding(12.dp)) {
@@ -86,7 +84,7 @@ fun RecipeCard(
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = sharedElementModifier(
+                    modifier = Modifier.sharedElementModifier(
                         sharedScope = sharedScope,
                         animatedScope = animatedScope,
                         key = RecipeSharedKeys.title(recipe.id),

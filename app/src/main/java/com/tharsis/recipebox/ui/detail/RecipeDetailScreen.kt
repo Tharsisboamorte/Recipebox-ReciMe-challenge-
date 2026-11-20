@@ -128,12 +128,10 @@ private fun RecipeDetailContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16f / 9f)
-                .then(
-                    sharedElementModifier(
-                        sharedScope = sharedScope,
-                        animatedScope = animatedScope,
-                        key = RecipeSharedKeys.image(recipe.id),
-                    ),
+                .sharedElementModifier(
+                    sharedScope = sharedScope,
+                    animatedScope = animatedScope,
+                    key = RecipeSharedKeys.image(recipe.id),
                 ),
         )
 
@@ -144,7 +142,7 @@ private fun RecipeDetailContent(
             Text(
                 text = recipe.title,
                 style = MaterialTheme.typography.headlineSmall,
-                modifier = sharedElementModifier(
+                modifier = Modifier.sharedElementModifier(
                     sharedScope = sharedScope,
                     animatedScope = animatedScope,
                     key = RecipeSharedKeys.title(recipe.id),
