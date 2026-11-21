@@ -1,6 +1,5 @@
 package com.tharsis.recipebox.ui.navigation
 
-import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
@@ -24,12 +23,15 @@ object Routes {
     fun detail(recipeId: String) = "recipe/$recipeId"
 }
 
-private const val TRANSITION_MS = 350
+private const val TRANSITION_MS = 320
 
 /**
- * Hosts the navigation graph inside a [SharedTransitionLayout] so list cards
- * can morph into the detail screen. Each destination receives the shared
- * transition scope plus its own animated-content scope for the hero animation.
+ * Hosts navigation inside [SharedTransitionLayout] so the tapped recipe image
+ * morphs into the detail hero. Container transitions stay as fades (no swipe
+ * slide) so the shared-element motion remains the primary cue.
+ *
+ * Image decode sizes stay capped (see [com.tharsis.recipebox.ui.components.RecipeImageSize])
+ * to keep scroll memory under control while shared elements are active.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -45,6 +47,7 @@ fun RecipeNavHost(modifier: Modifier = Modifier) {
                 route = Routes.LIST,
                 enterTransition = { fadeIn(tween(TRANSITION_MS)) },
                 exitTransition = { fadeOut(tween(TRANSITION_MS)) },
+                popEnterTransition = { fadeIn(tween(TRANSITION_MS)) },
             ) {
                 RecipeListRoute(
                     onRecipeClick = { id -> navController.navigate(Routes.detail(id)) },
@@ -58,18 +61,9 @@ fun RecipeNavHost(modifier: Modifier = Modifier) {
                 arguments = listOf(
                     navArgument(Routes.ARG_RECIPE_ID) { type = NavType.StringType },
                 ),
-                enterTransition = {
-                    fadeIn(tween(TRANSITION_MS)) + slideIntoContainer(
-                        AnimatedContentTransitionScope.SlideDirection.Start,
-                        tween(TRANSITION_MS),
-                    )
-                },
-                popExitTransition = {
-                    fadeOut(tween(TRANSITION_MS)) + slideOutOfContainer(
-                        AnimatedContentTransitionScope.SlideDirection.End,
-                        tween(TRANSITION_MS),
-                    )
-                },
+                enterTransition = { fadeIn(tween(TRANSITION_MS)) },
+                exitTransition = { fadeOut(tween(TRANSITION_MS)) },
+                popExitTransition = { fadeOut(tween(TRANSITION_MS)) },
             ) { backStackEntry ->
                 val recipeId = backStackEntry.arguments?.getString(Routes.ARG_RECIPE_ID).orEmpty()
                 RecipeDetailRoute(
