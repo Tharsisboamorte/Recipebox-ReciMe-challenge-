@@ -4,6 +4,8 @@ import com.tharsis.recipebox.data.api.AssetReader
 import com.tharsis.recipebox.data.api.ContextAssetReader
 import com.tharsis.recipebox.data.api.LocalRecipeApi
 import com.tharsis.recipebox.data.api.RecipeApi
+import com.tharsis.recipebox.data.cache.RecipeCache
+import com.tharsis.recipebox.data.cache.RecipeDiskCache
 import com.tharsis.recipebox.data.repository.RecipeRepository
 import com.tharsis.recipebox.data.repository.RecipeRepositoryImpl
 import com.tharsis.recipebox.ui.detail.RecipeDetailViewModel
@@ -28,9 +30,11 @@ val appModule = module {
 
     single<AssetReader> { ContextAssetReader(androidContext()) }
 
+    single<RecipeCache> { RecipeDiskCache(context = androidContext(), json = get()) }
+
     single<RecipeApi> { LocalRecipeApi(assetReader = get(), json = get()) }
 
-    single<RecipeRepository> { RecipeRepositoryImpl(api = get()) }
+    single<RecipeRepository> { RecipeRepositoryImpl(api = get(), diskCache = get()) }
 
     viewModel { RecipeListViewModel(repository = get()) }
 

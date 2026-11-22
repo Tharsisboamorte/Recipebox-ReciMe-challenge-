@@ -146,7 +146,6 @@ fun RecipeListScreen(
             onClearAll = onClearFilters,
             onDismiss = {
                 scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    //TODO: FIX THIS UNUSED VARIABLE
                     if (!sheetState.isVisible) showFilters = false
                 }
             },

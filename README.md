@@ -4,7 +4,7 @@ A native Android app for browsing, searching, and filtering cooking recipes, bui
 
 ## Features
 
-- Browse recipes in a responsive, adaptive grid.
+- Browse recipes in a responsive, adaptive grid or list.
 - Full-text search across recipe **titles, descriptions, and cooking instructions**.
 - Filters:
   - Vegetarian only
@@ -12,6 +12,7 @@ A native Android app for browsing, searching, and filtering cooking recipes, bui
   - Must-include ingredients
   - Must-not-include ingredients
 - Rich recipe detail screen with ingredients and numbered instructions.
+- **Offline-first**: recipe JSON is cached to disk after the first load; food photos are bundled in `assets/images/` so the app works without network.
 - Smooth motion: shared-element transition from list card to detail, crossfading images, press feedback on cards, and animated grid re-ordering as filters change.
 
 ## Setup
@@ -28,7 +29,7 @@ Requirements: Android Studio (latest stable) with JDK 11+ and an Android SDK tha
 
 The generated APK is at `app/build/outputs/apk/debug/app-debug.apk`. Open the project in Android Studio and run the `app` configuration on an emulator/device (min SDK 26).
 
-> Note: recipe images are loaded from the network (placeholder stock photos), so the device/emulator needs internet access to display them. The app functions fully offline otherwise and shows a themed placeholder when an image is unavailable.
+> Recipe photos are shipped inside `app/src/main/assets/images/` and referenced via `imageAsset` in `recipes.json`, so list and detail screens work fully offline. Coil still keeps a disk cache for any remote `imageUrl` fallback.
 
 ## Architecture
 
@@ -36,6 +37,8 @@ The app follows **MVVM** with a clean separation between data, domain, and prese
 
 ```
 UI (Compose screens) -> ViewModels -> RecipeRepository -> RecipeApi -> assets/recipes.json
+                                         \-> RecipeCache (filesDir)  [offline fallback]
+Images: assets/images/*.jpg via imageAsset (Coil + disk cache)
 ```
 
 ```mermaid
@@ -43,7 +46,9 @@ flowchart LR
   UI[Compose Screens] --> VM[ViewModels]
   VM --> Repo[RecipeRepository]
   Repo --> Api[RecipeApi]
+  Repo --> Cache[RecipeDiskCache]
   Api --> Json[assets/recipes.json]
+  UI --> Assets[assets/images]
 ```
 
 ### Package layout (`com.tharsis.recipebox`)
@@ -53,7 +58,8 @@ flowchart LR
 | `data/model` | Clean domain models (`Recipe`, `DietaryAttributes`). |
 | `data/api` | `RecipeApi` contract, `LocalRecipeApi` (JSON-backed impl), `RecipeSearchQuery`, pure `RecipeFilter`, `AssetReader`. |
 | `data/api/dto` | Serialization DTOs + mappers to the domain model. |
-| `data/repository` | `RecipeRepository`  single source of truth for the UI. |
+| `data/repository` | `RecipeRepository` single source of truth for the UI (writes/reads offline cache). |
+| `data/cache` | `RecipeCache` / `RecipeDiskCache` — last-known recipe list on disk. |
 | `di` | Koin `appModule`. |
 | `ui/list` | List screen, search bar, filter sheet, `RecipeListViewModel`. |
 | `ui/detail` | Detail screen + `RecipeDetailViewModel`. |
@@ -71,7 +77,8 @@ Even though data comes from a local file, the data layer is modeled as a suspend
 - **Koin for DI.** Lightweight and idiomatic for a Compose app; no code generation. The detail ViewModel receives its recipe id as a Koin parameter from the navigation argument, keeping it free of navigation concerns.
 - **kotlinx.serialization** for JSON. No Retrofit/OkHttp are used for data, matching the "no real API call" constraint. A DTO layer keeps the JSON contract decoupled from the domain model.
 - **Search modeled as an endpoint.** `RecipeFilter` is a pure, framework-free object so the search semantics are unit-testable and identical to what a server-side search would return. Filtering runs off the main thread via the IO dispatcher.
-- **Coil 3** for image loading (crossfade, caching, placeholders) the most idiomatic Compose image loader.
+- **Coil 3** for image loading (crossfade, memory + disk cache). Bundled `imageAsset` photos load from `file:///android_asset/images/...` with no network.
+- **Offline recipe cache.** `RecipeRepository` persists each successful API payload via `RecipeDiskCache` and serves it when the API throws.
 - **Native Compose motion** (no extra animation SDK): `SharedTransitionLayout` for the list→detail hero transition, `animateItem()` for grid changes, press-scale on cards, and nav fade/slide transitions. Search input is debounced (250 ms) so results update smoothly while typing.
 
 ## Filter semantics

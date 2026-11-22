@@ -14,5 +14,3 @@ val TextPrimary = Color(0xFF121212)
 val TextSecondary = Color(0xFFA9A9A9)
 val TextOnGreen = Color(0xFFFFFFFF)
 val OverlayScrim = Color(0x99000000)
-//todo: remove not used??
-val RatingAmber = Color(0xFFFFAD30)

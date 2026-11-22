@@ -24,6 +24,8 @@ data class RecipeDto(
     @SerialName("description") val description: String = "",
     @SerialName("servings") val servings: Int = 1,
     @SerialName("imageUrl") val imageUrl: String? = null,
+    /** File name under `assets/images/` (e.g. `r1.jpg`) for offline-first photos. */
+    @SerialName("imageAsset") val imageAsset: String? = null,
     @SerialName("ingredients") val ingredients: List<String> = emptyList(),
     @SerialName("instructions") val instructions: List<String> = emptyList(),
     @SerialName("dietary") val dietary: DietaryDto = DietaryDto(),
@@ -43,7 +45,7 @@ fun RecipeDto.toDomain(): Recipe = Recipe(
     title = title,
     description = description,
     servings = servings,
-    imageUrl = imageUrl,
+    imageUrl = resolveImageSource(imageAsset = imageAsset, imageUrl = imageUrl),
     ingredients = ingredients,
     instructions = instructions,
     dietary = DietaryAttributes(
@@ -53,3 +55,16 @@ fun RecipeDto.toDomain(): Recipe = Recipe(
         dairyFree = dietary.dairyFree,
     ),
 )
+
+/**
+ * Prefers a bundled asset (works offline) and falls back to a remote URL.
+ * Coil loads assets via the `file:///android_asset/...` scheme.
+ */
+fun resolveImageSource(imageAsset: String?, imageUrl: String?): String? {
+    val asset = imageAsset?.trim().orEmpty()
+    if (asset.isNotEmpty()) {
+        val fileName = asset.removePrefix("images/")
+        return "file:///android_asset/images/$fileName"
+    }
+    return imageUrl?.takeIf { it.isNotBlank() }
+}

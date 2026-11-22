@@ -35,7 +35,8 @@ enum class RecipeImageSize(val widthPx: Int, val heightPx: Int) {
 }
 
 /**
- * Recipe image loaded remotely via Coil with a hard-capped decode size.
+ * Recipe image loaded via Coil (bundled asset or remote URL) with a hard-capped
+ * decode size. Asset paths work offline; remote URLs also hit Coil's disk cache.
  */
 @Composable
 fun RecipeImage(
@@ -52,11 +53,13 @@ fun RecipeImage(
         if (imageUrl.isNullOrBlank()) {
             null
         } else {
+            val cacheKey = "$imageUrl-${widthPx}x$heightPx"
             ImageRequest.Builder(context)
                 .data(imageUrl)
                 .size(Size(widthPx, heightPx))
                 .precision(Precision.INEXACT)
-                .memoryCacheKey("$imageUrl-${widthPx}x$heightPx")
+                .memoryCacheKey(cacheKey)
+                .diskCacheKey(cacheKey)
                 .crossfade(120)
                 .build()
         }
