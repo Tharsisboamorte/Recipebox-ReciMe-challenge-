@@ -1,10 +1,8 @@
 # RecipeBox
 
-<div style="text-align: center">
-
-![RecipeBox logo](docs/screenshots/logo.png)
-
-</div>
+<p style="text-align: center">
+  <img src="docs/screenshots/logo.png" alt="RecipeBox logo" />
+</p>
 
 A native Android app for browsing, searching, and filtering cooking recipes, built with **Kotlin** and **Jetpack Compose**. Recipe data is loaded from a bundled JSON file that is treated as if it were a real search API.
 
@@ -14,22 +12,22 @@ A native Android app for browsing, searching, and filtering cooking recipes, bui
 |:---:|:---:|:---:|
 | ![Grid](docs/screenshots/home-grid.png) | ![List](docs/screenshots/home-list.png) | ![Filters](docs/screenshots/filters.png) |
 
-| Detail · Ingredients | Detail · Procedure |
+| Detail · Ingredients | Detail · Instructions |
 |:---:|:---:|
-| ![Ingredients](docs/screenshots/detail-ingredients.png) | ![Procedure](docs/screenshots/detail-procedure.png) |
+| ![Ingredients](docs/screenshots/detail-ingredients.png) | ![Instructions](docs/screenshots/detail-procedure.png) |
 
 ## Features
 
-- Browse recipes in a responsive, adaptive grid or list.
+- Browse recipes in a **grid** or **list** layout (toggle in the search bar).
 - Full-text search across recipe **titles, descriptions, and cooking instructions**.
 - Filters:
   - Vegetarian only
   - Servings range (min/max)
   - Must-include ingredients
   - Must-not-include ingredients
-- Rich recipe detail screen with ingredients and numbered instructions.
+- Detail screen with hero image, dietary chips, sticky **Ingredients / Instructions** switcher, and compact list rows.
 - **Offline-first**: recipe JSON is cached to disk after the first load; food photos are bundled in `assets/images/` so the app works without network.
-- Smooth motion: shared-element transition from list card to detail, crossfading images, press feedback on cards, and animated grid re-ordering as filters change.
+- Smooth motion: shared-element transition from list card to detail, crossfading images, and animated layout changes as filters update.
 
 ## Setup
 
@@ -95,6 +93,7 @@ The data layer is a suspendable, query-driven API so a real backend is a one-lin
 - **Pure `RecipeFilter` in domain.** Unit-tested search semantics, identical to a server-side filter.
 - **Coil 3** + bundled `imageAsset` photos (offline). Disk catalog cache warms once per process.
 - **R8 for release** + Spotless/ktlint formatting.
+- **Always-light Material 3 theme** with brand green (`#129575`).
 
 ## Filter semantics
 

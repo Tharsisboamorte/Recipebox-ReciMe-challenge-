@@ -2,13 +2,16 @@ package com.tharsis.recipebox.ui.list
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.border
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,31 +19,47 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.People
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import com.tharsis.recipebox.R
 import com.tharsis.recipebox.domain.model.Recipe
+import com.tharsis.recipebox.ui.components.DietChipsRow
 import com.tharsis.recipebox.ui.components.RecipeImage
 import com.tharsis.recipebox.ui.components.RecipeImageSize
 import com.tharsis.recipebox.ui.components.RecipeSharedKeys
 import com.tharsis.recipebox.ui.components.sharedElementModifier
+import com.tharsis.recipebox.ui.components.toDietTags
 import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.OverlayScrim
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
 
 private val GridShape = RoundedCornerShape(Spacing.imageRadius)
-private val ListShape = RoundedCornerShape(Spacing.imageRadius)
+private val ListCardShape = RoundedCornerShape(20.dp)
+private val ListThumbShape = RoundedCornerShape(16.dp)
+private val ListCardHeight = 140.dp
+private val ListThumbSize = 108.dp
 
 @Composable
 fun RecipeCard(
@@ -110,7 +129,7 @@ private fun RecipeGridCard(
         Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
-                .padding(12.dp),
+                .padding(Spacing.md),
         ) {
             Text(
                 text = recipe.title,
@@ -126,12 +145,16 @@ private fun RecipeGridCard(
                 ),
             )
             Text(
-                text = subtitleFor(recipe),
+                text = pluralStringResource(
+                    R.plurals.servings_label,
+                    recipe.servings,
+                    recipe.servings,
+                ),
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.White.copy(alpha = 0.85f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.padding(top = 4.dp),
+                modifier = Modifier.padding(top = Spacing.xxs),
             )
         }
     }
@@ -145,73 +168,116 @@ private fun RecipeListCard(
     sharedScope: SharedTransitionScope? = null,
     animatedScope: AnimatedVisibilityScope? = null,
 ) {
+    val colors = MaterialTheme.colorScheme
+    val openLabel = stringResource(R.string.cd_open_recipe)
+    val dietTags = remember(recipe.dietary) { recipe.dietary.toDietTags() }
+
     Surface(
-        onClick = onClick,
-        shape = ListShape,
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        shadowElevation = 1.dp,
-        modifier = modifier.fillMaxWidth(),
+        shape = ListCardShape,
+        color = colors.surface,
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(ListCardHeight)
+            .border(
+                width = 1.dp,
+                color = colors.outlineVariant,
+                shape = ListCardShape,
+            )
+            .semantics(mergeDescendants = true) {
+                onClick(label = openLabel, action = null)
+            }
+            .clickable(
+                onClickLabel = openLabel,
+                onClick = onClick,
+            ),
     ) {
         Row(
-            modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(Spacing.lg),
+            verticalAlignment = Alignment.Top,
         ) {
             RecipeImage(
                 imageUrl = recipe.imageUrl,
                 contentDescription = recipe.title,
                 size = RecipeImageSize.Thumbnail,
                 modifier = Modifier
-                    .size(88.dp)
-                    .clip(RoundedCornerShape(12.dp))
+                    .size(ListThumbSize)
+                    .clip(ListThumbShape)
                     .sharedElementModifier(
                         sharedScope = sharedScope,
                         animatedScope = animatedScope,
                         key = RecipeSharedKeys.image(recipe.id),
                     ),
             )
-            Spacer(Modifier.width(12.dp))
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    text = recipe.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.sharedElementModifier(
-                        sharedScope = sharedScope,
-                        animatedScope = animatedScope,
-                        key = RecipeSharedKeys.title(recipe.id),
-                    ),
-                )
-                Text(
-                    text = recipe.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.padding(top = 4.dp),
-                )
-                Text(
-                    text = subtitleFor(recipe),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Medium,
-                    modifier = Modifier.padding(top = 8.dp),
-                )
+            Spacer(Modifier.width(Spacing.md))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column {
+                    Text(
+                        text = recipe.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = colors.onSurface,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.sharedElementModifier(
+                            sharedScope = sharedScope,
+                            animatedScope = animatedScope,
+                            key = RecipeSharedKeys.title(recipe.id),
+                        ),
+                    )
+                    Text(
+                        text = recipe.description,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = colors.onSurfaceVariant,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.padding(top = Spacing.xxs),
+                    )
+                }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.People,
+                        contentDescription = null,
+                        tint = colors.onSurfaceVariant,
+                        modifier = Modifier.size(16.dp),
+                    )
+                    Text(
+                        text = pluralStringResource(
+                            R.plurals.servings_label,
+                            recipe.servings,
+                            recipe.servings,
+                        ),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = colors.onSurfaceVariant,
+                        maxLines = 1,
+                    )
+                    Spacer(Modifier.weight(1f))
+                    DietChipsRow(tags = dietTags)
+                }
             }
         }
     }
 }
 
-private fun subtitleFor(recipe: Recipe): String {
-    val diet = recipe.dietary.activeLabels.firstOrNull()
-    return buildString {
-        append("${recipe.servings} servings")
-        if (diet != null) {
-            append(" · ")
-            append(diet)
-        }
-    }
+private class ListCardPreviewProvider : PreviewParameterProvider<Recipe> {
+    override val values = sequenceOf(
+        SampleRecipes.margherita, // short title, 1 tag
+        SampleRecipes.curry, // long title, 2 tags
+        SampleRecipes.chickpeaStew, // short title, 3 tags → 2 + "+1"
+        SampleRecipes.buddhaBowl, // 4 tags → 2 + "+2"
+    )
 }
 
 @Preview(showBackground = true, widthDp = 180)
@@ -222,20 +288,22 @@ private fun RecipeGridCardPreview() {
             recipe = SampleRecipes.margherita,
             onClick = {},
             layoutMode = RecipeLayoutMode.Grid,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(Spacing.md),
         )
     }
 }
 
-@Preview(showBackground = true, widthDp = 360)
+@Preview(showBackground = true, widthDp = 360, name = "List — fixed height")
 @Composable
-private fun RecipeListCardPreview() {
+private fun RecipeListCardPreview(
+    @PreviewParameter(ListCardPreviewProvider::class) recipe: Recipe,
+) {
     RecipeBoxTheme {
         RecipeCard(
-            recipe = SampleRecipes.margherita,
+            recipe = recipe,
             onClick = {},
             layoutMode = RecipeLayoutMode.List,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(Spacing.md),
         )
     }
 }

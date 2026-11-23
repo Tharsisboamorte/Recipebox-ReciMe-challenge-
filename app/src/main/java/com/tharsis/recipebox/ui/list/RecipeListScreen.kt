@@ -13,7 +13,10 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -26,8 +29,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -35,9 +36,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.tharsis.recipebox.R
 import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.ui.components.EmptyResultState
@@ -93,24 +96,29 @@ fun RecipeListScreen(
     Scaffold(
         modifier = modifier.fillMaxSize(),
         containerColor = MaterialTheme.colorScheme.background,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        text = stringResource(R.string.list_title),
-                        fontWeight = FontWeight.Bold,
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
-                    actionIconContentColor = MaterialTheme.colorScheme.onBackground,
+    ) { innerPadding ->
+        // Top inset from Scaffold; list/grid apply navigationBars in contentPadding
+        // so the last card can scroll clear of the gesture bar.
+        val layoutDirection = LocalLayoutDirection.current
+        Column(
+            modifier = Modifier.padding(
+                top = innerPadding.calculateTopPadding(),
+                start = innerPadding.calculateLeftPadding(layoutDirection),
+                end = innerPadding.calculateRightPadding(layoutDirection),
+            ),
+        ) {
+            Text(
+                text = stringResource(R.string.list_title),
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier = Modifier.padding(
+                    start = Spacing.lg,
+                    end = Spacing.lg,
+                    top = Spacing.sm,
+                    bottom = Spacing.xxs,
                 ),
             )
-        },
-    ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
             RecipeSearchBar(
                 searchText = state.searchText,
                 activeFilterCount = state.filters.activeCount,
@@ -193,6 +201,19 @@ private fun RecipeResults(
 }
 
 @Composable
+private fun listContentPadding(): PaddingValues {
+    val navBottom = WindowInsets.navigationBars
+        .asPaddingValues()
+        .calculateBottomPadding()
+    return PaddingValues(
+        start = Spacing.lg,
+        end = Spacing.lg,
+        top = Spacing.lg,
+        bottom = navBottom + Spacing.lg,
+    )
+}
+
+@Composable
 private fun RecipeGrid(
     state: RecipeListUiState,
     onIntent: (RecipeListIntent) -> Unit,
@@ -203,7 +224,7 @@ private fun RecipeGrid(
     LazyVerticalGrid(
         columns = GridCells.Fixed(AppConfig.Grid.COLUMN_COUNT),
         state = gridState,
-        contentPadding = PaddingValues(Spacing.lg),
+        contentPadding = listContentPadding(),
         horizontalArrangement = Arrangement.spacedBy(Spacing.md + Spacing.xxs),
         verticalArrangement = Arrangement.spacedBy(Spacing.md + Spacing.xxs),
         modifier = Modifier.fillMaxSize(),
@@ -230,8 +251,8 @@ private fun RecipeLazyList(
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,
-        contentPadding = PaddingValues(Spacing.lg),
-        verticalArrangement = Arrangement.spacedBy(Spacing.md),
+        contentPadding = listContentPadding(),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
         modifier = Modifier.fillMaxSize(),
     ) {
         items(items = state.recipes, key = { it.id }) { recipe ->

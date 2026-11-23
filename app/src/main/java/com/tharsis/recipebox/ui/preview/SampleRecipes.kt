@@ -50,6 +50,21 @@ object SampleRecipes {
         dietary = DietaryAttributes(glutenFree = true, dairyFree = true),
     )
 
+    val chickpeaStew = Recipe(
+        id = "r3",
+        title = "Chickpea & Spinach Stew",
+        description = "A hearty, budget-friendly vegan stew with chickpeas, spinach, and warm spices.",
+        servings = 4,
+        imageUrl = null,
+        ingredients = listOf("2 cans chickpeas", "200g spinach", "1 onion"),
+        instructions = listOf("Sauté the onion.", "Add chickpeas and simmer.", "Fold in spinach."),
+        dietary = DietaryAttributes(
+            vegetarian = true,
+            vegan = true,
+            glutenFree = true,
+        ),
+    )
+
     val buddhaBowl = Recipe(
         id = "r14",
         title = "Roasted Vegetable Buddha Bowl",
@@ -61,5 +76,5 @@ object SampleRecipes {
         dietary = DietaryAttributes(vegetarian = true, vegan = true, glutenFree = true, dairyFree = true),
     )
 
-    val all: List<Recipe> = listOf(margherita, curry, buddhaBowl)
+    val all: List<Recipe> = listOf(margherita, curry, chickpeaStew, buddhaBowl)
 }
