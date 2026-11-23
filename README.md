@@ -47,7 +47,7 @@ The generated APK is at `app/build/outputs/apk/debug/app-debug.apk`. Open the pr
 
 ## Architecture
 
-The app follows **MVVM + minimal Clean Architecture** with a light MVI shell (ViaUnica-inspired, single-module): sealed `Intent` → ViewModel → immutable `UiState` + `SideEffect`s. Dependencies point inward: **ui → domain ← data**.
+The app follows **MVVM + minimal Clean Architecture** with a light MVI shell (single-module): sealed `Intent` → ViewModel → immutable `UiState` + `SideEffect`s. Dependencies point inward: **ui → domain ← data**.
 
 ```
 UI (Route/Screen/VM) -> domain.RecipeRepository
@@ -87,7 +87,7 @@ The data layer is a suspendable, query-driven API so a real backend is a one-lin
 ## Key design decisions
 
 - **Clean-ish dependency rule.** UI depends on `domain`; `data` implements domain contracts and owns DTOs/mappers.
-- **Intent / UiState / SideEffect.** ViaUnica-style presentation without multi-module ceremony.
+- **Intent / UiState / SideEffect.**.
 - **No hardcoded UI copy / magic numbers.** `strings.xml`, `Spacing`, `AppConfig`.
 - **Koin for DI.** Detail ViewModel receives recipe id as a parameter.
 - **Pure `RecipeFilter` in domain.** Unit-tested search semantics, identical to a server-side filter.
