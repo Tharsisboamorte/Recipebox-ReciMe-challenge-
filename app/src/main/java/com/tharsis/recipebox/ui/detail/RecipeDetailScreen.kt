@@ -271,7 +271,7 @@ private fun HeroWithBack(
             .padding(top = Spacing.sm),
     ) {
         RecipeImage(
-            imageUrl = recipe.imageUrl,
+            imageUri = recipe.imageUri,
             contentDescription = recipe.title,
             size = RecipeImageSize.Hero,
             modifier = Modifier

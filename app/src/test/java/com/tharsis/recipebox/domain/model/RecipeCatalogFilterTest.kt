@@ -7,7 +7,7 @@ import org.junit.Test
 /**
  * Unit tests for pure search/filter semantics — no Android dependencies.
  */
-class RecipeFilterTest {
+class RecipeCatalogFilterTest {
 
     private val pizza = recipe(
         id = "1",
@@ -43,37 +43,37 @@ class RecipeFilterTest {
 
     @Test
     fun `empty query returns everything`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery())
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery())
         assertEquals(all, result)
     }
 
     @Test
-    fun `text matches title case-insensitively`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery(text = "pizza"))
+    fun `search text matches title case-insensitively`() {
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery(searchText = "pizza"))
         assertEquals(listOf(pizza), result)
     }
 
     @Test
-    fun `text matches instruction content`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery(text = "simmer"))
+    fun `search text matches instruction content`() {
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery(searchText = "simmer"))
         assertEquals(listOf(curry), result)
     }
 
     @Test
     fun `vegetarian filter excludes non-vegetarian recipes`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery(vegetarianOnly = true))
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery(vegetarianOnly = true))
         assertEquals(listOf(pizza, salad), result)
     }
 
     @Test
     fun `servings bounds are inclusive`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery(minServings = 4, maxServings = 6))
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery(minServings = 4, maxServings = 6))
         assertEquals(listOf(curry, salad), result)
     }
 
     @Test
     fun `include requires all ingredients present`() {
-        val result = RecipeFilter.apply(
+        val result = RecipeCatalogFilter.apply(
             all,
             RecipeSearchQuery(includeIngredients = listOf("tomatoes", "mozzarella")),
         )
@@ -82,14 +82,14 @@ class RecipeFilterTest {
 
     @Test
     fun `exclude removes recipes containing any excluded ingredient`() {
-        val result = RecipeFilter.apply(all, RecipeSearchQuery(excludeIngredients = listOf("chicken")))
+        val result = RecipeCatalogFilter.apply(all, RecipeSearchQuery(excludeIngredients = listOf("chicken")))
         assertTrue(result.none { it.id == curry.id })
         assertEquals(listOf(pizza, salad), result)
     }
 
     @Test
     fun `filters combine with AND semantics`() {
-        val result = RecipeFilter.apply(
+        val result = RecipeCatalogFilter.apply(
             all,
             RecipeSearchQuery(
                 vegetarianOnly = true,
@@ -113,7 +113,7 @@ class RecipeFilterTest {
         title = title,
         description = description,
         servings = servings,
-        imageUrl = null,
+        imageUri = null,
         ingredients = ingredients,
         instructions = instructions,
         dietary = dietary,

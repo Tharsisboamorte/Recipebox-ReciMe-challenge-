@@ -38,7 +38,7 @@ enum class RecipeImageSize(val widthPx: Int, val heightPx: Int) {
  */
 @Composable
 fun RecipeImage(
-    imageUrl: String?,
+    imageUri: String?,
     contentDescription: String?,
     modifier: Modifier = Modifier,
     size: RecipeImageSize = RecipeImageSize.Thumbnail,
@@ -47,13 +47,13 @@ fun RecipeImage(
     val widthPx = size.widthPx
     val heightPx = size.heightPx
 
-    val request = remember(imageUrl, widthPx, heightPx) {
-        if (imageUrl.isNullOrBlank()) {
+    val request = remember(imageUri, widthPx, heightPx) {
+        if (imageUri.isNullOrBlank()) {
             null
         } else {
-            val cacheKey = "$imageUrl-${widthPx}x$heightPx"
+            val cacheKey = "$imageUri-${widthPx}x$heightPx"
             ImageRequest.Builder(context)
-                .data(imageUrl)
+                .data(imageUri)
                 .size(Size(widthPx, heightPx))
                 .precision(Precision.INEXACT)
                 .memoryCacheKey(cacheKey)

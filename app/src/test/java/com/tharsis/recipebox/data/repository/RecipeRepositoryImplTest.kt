@@ -1,11 +1,11 @@
 package com.tharsis.recipebox.data.repository
 
 import com.tharsis.recipebox.data.api.RecipeApi
-import com.tharsis.recipebox.domain.model.RecipeFilter
-import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 import com.tharsis.recipebox.data.local.RecipeCache
 import com.tharsis.recipebox.domain.model.DietaryAttributes
 import com.tharsis.recipebox.domain.model.Recipe
+import com.tharsis.recipebox.domain.model.RecipeCatalogFilter
+import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -18,7 +18,7 @@ class RecipeRepositoryImplTest {
         title = "Cached Soup",
         description = "Warm",
         servings = 2,
-        imageUrl = "file:///android_asset/images/r1.jpg",
+        imageUri = "file:///android_asset/images/r1.jpg",
         ingredients = listOf("Water"),
         instructions = listOf("Boil"),
         dietary = DietaryAttributes(
@@ -40,14 +40,14 @@ class RecipeRepositoryImplTest {
 
         cache.saved = emptyList()
         repo.getRecipes()
-        repo.searchRecipes(RecipeSearchQuery(text = "soup"))
+        repo.searchRecipes(RecipeSearchQuery(searchText = "soup"))
 
         assertTrue("disk must not be rewritten on every search", cache.saved.isEmpty())
     }
 
     @Test
     fun `getRecipes falls back to disk cache when api fails`() = runTest {
-        val api = FakeApi(fail = true)
+        val api = FakeApi(shouldFail = true)
         val cache = FakeCache(stored = listOf(sample))
         val repo = RecipeRepositoryImpl(api = api, diskCache = cache)
 
@@ -59,30 +59,32 @@ class RecipeRepositoryImplTest {
 
     @Test
     fun `searchRecipes filters disk cache when api fails`() = runTest {
-        val api = FakeApi(fail = true)
+        val api = FakeApi(shouldFail = true)
         val cache = FakeCache(stored = listOf(sample))
         val repo = RecipeRepositoryImpl(api = api, diskCache = cache)
 
-        val result = repo.searchRecipes(RecipeSearchQuery(text = "soup"))
+        val result = repo.searchRecipes(RecipeSearchQuery(searchText = "soup"))
 
         assertEquals(1, result.size)
         assertEquals("Cached Soup", result.first().title)
     }
 
-    private class FakeApi(private val recipes: List<Recipe> = emptyList(), private val fail: Boolean = false) :
-        RecipeApi {
+    private class FakeApi(
+        private val recipes: List<Recipe> = emptyList(),
+        private val shouldFail: Boolean = false,
+    ) : RecipeApi {
         override suspend fun getRecipes(): List<Recipe> {
-            if (fail) error("offline")
+            if (shouldFail) error("offline")
             return recipes
         }
 
         override suspend fun searchRecipes(query: RecipeSearchQuery): List<Recipe> {
-            if (fail) error("offline")
-            return RecipeFilter.apply(recipes, query)
+            if (shouldFail) error("offline")
+            return RecipeCatalogFilter.apply(recipes, query)
         }
 
         override suspend fun getRecipeById(id: String): Recipe? {
-            if (fail) error("offline")
+            if (shouldFail) error("offline")
             return recipes.firstOrNull { it.id == id }
         }
     }

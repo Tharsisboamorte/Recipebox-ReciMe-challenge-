@@ -171,8 +171,8 @@ private fun RecipeResults(
     AnimatedContent(
         targetState = state.layoutMode,
         transitionSpec = {
-            val forward = targetState == RecipeLayoutMode.List
-            if (forward) {
+            val isSwitchingToList = targetState == RecipeLayoutMode.List
+            if (isSwitchingToList) {
                 (slideInHorizontally(tween(enterMs)) { it / 3 } + fadeIn(tween(enterMs))) togetherWith
                     (slideOutHorizontally(tween(enterMs)) { -it / 3 } + fadeOut(tween(exitFadeMs)))
             } else {

@@ -21,7 +21,7 @@ import com.tharsis.recipebox.ui.theme.Spacing
  * so light and dark themes stay readable.
  */
 @Composable
-fun AppCard(title: String, body: String, modifier: Modifier = Modifier) {
+fun AppCard(title: String, description: String, modifier: Modifier = Modifier) {
     val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(Spacing.cardRadius)
     Surface(
@@ -46,7 +46,7 @@ fun AppCard(title: String, body: String, modifier: Modifier = Modifier) {
                 color = colors.onSurface,
             )
             Text(
-                text = body,
+                text = description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = colors.onSurfaceVariant,
                 modifier = Modifier.padding(top = Spacing.xs),
@@ -61,7 +61,7 @@ private fun AppCardPreview() {
     RecipeBoxTheme {
         AppCard(
             title = "Step 1",
-            body = "Lorem ipsum dolor sit amet consectetur. Elit pretium cras mattis.",
+            description = "Lorem ipsum dolor sit amet consectetur. Elit pretium cras mattis.",
             modifier = Modifier.padding(Spacing.lg),
         )
     }

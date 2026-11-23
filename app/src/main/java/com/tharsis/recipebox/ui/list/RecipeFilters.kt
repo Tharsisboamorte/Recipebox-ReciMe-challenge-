@@ -24,12 +24,12 @@ data class RecipeFilters(
             excludeIngredients.isNotEmpty(),
         ).count { it }
 
-    val hasAny: Boolean get() = activeCount > 0
+    val hasActiveFilters: Boolean get() = activeCount > 0
 }
 
 /** Combines the search text with [RecipeFilters] into a domain search query. */
-fun RecipeFilters.toQuery(text: String): RecipeSearchQuery = RecipeSearchQuery(
-    text = text.takeIf { it.isNotBlank() },
+fun RecipeFilters.toQuery(searchText: String): RecipeSearchQuery = RecipeSearchQuery(
+    searchText = searchText.takeIf { it.isNotBlank() },
     vegetarianOnly = vegetarianOnly,
     minServings = minServings,
     maxServings = maxServings,

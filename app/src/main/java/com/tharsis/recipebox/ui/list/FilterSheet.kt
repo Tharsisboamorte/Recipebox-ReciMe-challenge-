@@ -126,7 +126,7 @@ fun FilterSheetContent(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f),
             )
-            if (filters.hasAny) {
+            if (filters.hasActiveFilters) {
                 TextButton(onClick = onClearAll) {
                     Text(stringResource(R.string.filter_clear), color = MaterialTheme.colorScheme.primary)
                 }
@@ -270,14 +270,14 @@ private fun IngredientChipEditor(
     onAdd: (String) -> Unit,
     onRemove: (String) -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
+    var ingredientDraft by remember { mutableStateOf("") }
 
     fun commit() {
-        val value = text.trim()
+        val value = ingredientDraft.trim()
         if (value.isNotEmpty() && ingredients.none { it.equals(value, ignoreCase = true) }) {
             onAdd(value)
         }
-        text = ""
+        ingredientDraft = ""
     }
 
     Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -288,8 +288,8 @@ private fun IngredientChipEditor(
             color = MaterialTheme.colorScheme.onSurface,
         )
         OutlinedTextField(
-            value = text,
-            onValueChange = { text = it },
+            value = ingredientDraft,
+            onValueChange = { ingredientDraft = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
             placeholder = { Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant) },

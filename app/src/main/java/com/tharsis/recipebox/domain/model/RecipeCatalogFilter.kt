@@ -4,17 +4,17 @@ package com.tharsis.recipebox.domain.model
  * Pure Kotlin filtering for [RecipeSearchQuery].
  * Framework-free so search semantics can be unit-tested without Android or I/O.
  */
-object RecipeFilter {
+object RecipeCatalogFilter {
 
     fun apply(recipes: List<Recipe>, query: RecipeSearchQuery): List<Recipe> {
         if (query.isEmpty) return recipes
 
-        val text = query.text?.trim()?.lowercase().orEmpty()
+        val searchText = query.searchText?.trim()?.lowercase().orEmpty()
         val include = query.includeIngredients.map { it.trim().lowercase() }.filter { it.isNotEmpty() }
         val exclude = query.excludeIngredients.map { it.trim().lowercase() }.filter { it.isNotEmpty() }
 
         return recipes.filter { recipe ->
-            recipe.matchesText(text) &&
+            recipe.matchesText(searchText) &&
                 recipe.matchesVegetarian(query.vegetarianOnly) &&
                 recipe.matchesServings(query.minServings, query.maxServings) &&
                 recipe.matchesIncludedIngredients(include) &&
@@ -22,8 +22,8 @@ object RecipeFilter {
         }
     }
 
-    private fun Recipe.matchesText(text: String): Boolean {
-        if (text.isEmpty()) return true
+    private fun Recipe.matchesText(searchText: String): Boolean {
+        if (searchText.isEmpty()) return true
         val haystack = buildString {
             append(title.lowercase())
             append(' ')
@@ -31,7 +31,7 @@ object RecipeFilter {
             append(' ')
             append(instructions.joinToString(" ").lowercase())
         }
-        return haystack.contains(text)
+        return haystack.contains(searchText)
     }
 
     private fun Recipe.matchesVegetarian(vegetarianOnly: Boolean): Boolean =

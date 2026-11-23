@@ -44,12 +44,12 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import com.tharsis.recipebox.R
 import com.tharsis.recipebox.domain.model.Recipe
-import com.tharsis.recipebox.ui.components.DietChipsRow
+import com.tharsis.recipebox.ui.components.DietaryChipsRow
 import com.tharsis.recipebox.ui.components.RecipeImage
 import com.tharsis.recipebox.ui.components.RecipeImageSize
 import com.tharsis.recipebox.ui.components.RecipeSharedKeys
 import com.tharsis.recipebox.ui.components.sharedElementModifier
-import com.tharsis.recipebox.ui.components.toDietTags
+import com.tharsis.recipebox.ui.components.toDietaryTags
 import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.OverlayScrim
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
@@ -104,7 +104,7 @@ private fun RecipeGridCard(
             .clickable(onClick = onClick),
     ) {
         RecipeImage(
-            imageUrl = recipe.imageUrl,
+            imageUri = recipe.imageUri,
             contentDescription = recipe.title,
             size = RecipeImageSize.Thumbnail,
             modifier = Modifier
@@ -170,7 +170,7 @@ private fun RecipeListCard(
 ) {
     val colors = MaterialTheme.colorScheme
     val openLabel = stringResource(R.string.cd_open_recipe)
-    val dietTags = remember(recipe.dietary) { recipe.dietary.toDietTags() }
+    val dietaryTags = remember(recipe.dietary) { recipe.dietary.toDietaryTags() }
 
     Surface(
         shape = ListCardShape,
@@ -200,7 +200,7 @@ private fun RecipeListCard(
             verticalAlignment = Alignment.Top,
         ) {
             RecipeImage(
-                imageUrl = recipe.imageUrl,
+                imageUri = recipe.imageUri,
                 contentDescription = recipe.title,
                 size = RecipeImageSize.Thumbnail,
                 modifier = Modifier
@@ -264,7 +264,7 @@ private fun RecipeListCard(
                         maxLines = 1,
                     )
                     Spacer(Modifier.weight(1f))
-                    DietChipsRow(tags = dietTags)
+                    DietaryChipsRow(tags = dietaryTags)
                 }
             }
         }

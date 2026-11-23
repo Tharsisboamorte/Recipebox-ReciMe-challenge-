@@ -9,7 +9,8 @@ data class Recipe(
     val title: String,
     val description: String,
     val servings: Int,
-    val imageUrl: String?,
+    /** Coil-ready URI: bundled asset (`file:///android_asset/...`) or remote URL. */
+    val imageUri: String?,
     val ingredients: List<String>,
     val instructions: List<String>,
     val dietary: DietaryAttributes,

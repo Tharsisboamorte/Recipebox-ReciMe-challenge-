@@ -17,7 +17,7 @@ class RecipeDtoTest {
             imageAsset = "r1.jpg",
         ).toDomain()
 
-        assertEquals("file:///android_asset/images/r1.jpg", recipe.imageUrl)
+        assertEquals("file:///android_asset/images/r1.jpg", recipe.imageUri)
     }
 
     @Test
@@ -28,7 +28,7 @@ class RecipeDtoTest {
             imageUrl = "https://example.com/remote.jpg",
         ).toDomain()
 
-        assertEquals("https://example.com/remote.jpg", recipe.imageUrl)
+        assertEquals("https://example.com/remote.jpg", recipe.imageUri)
     }
 
     @Test

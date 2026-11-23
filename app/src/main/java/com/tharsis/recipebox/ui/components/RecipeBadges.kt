@@ -33,7 +33,7 @@ import com.tharsis.recipebox.domain.model.DietaryAttributes
 import com.tharsis.recipebox.ui.theme.Spacing
 
 /** Dietary tags in display-priority order (Vegan before Vegetarian). */
-enum class DietTag {
+enum class DietaryTag {
     Vegan,
     Vegetarian,
     GlutenFree,
@@ -44,17 +44,17 @@ enum class DietTag {
  * Maps dietary flags to ordered tags. Vegan implies vegetarian, so Vegetarian
  * is omitted when Vegan is set. Order: Vegan > Vegetarian > Gluten-Free > Dairy-Free.
  */
-fun DietaryAttributes.toDietTags(): List<DietTag> = buildList {
+fun DietaryAttributes.toDietaryTags(): List<DietaryTag> = buildList {
     when {
-        vegan -> add(DietTag.Vegan)
-        vegetarian -> add(DietTag.Vegetarian)
+        vegan -> add(DietaryTag.Vegan)
+        vegetarian -> add(DietaryTag.Vegetarian)
     }
-    if (glutenFree) add(DietTag.GlutenFree)
-    if (dairyFree) add(DietTag.DairyFree)
+    if (glutenFree) add(DietaryTag.GlutenFree)
+    if (dairyFree) add(DietaryTag.DairyFree)
 }
 
 /**
- * Full-size tonal chips for detail (may wrap). Prefer [DietChipsRow] on list cards.
+ * Full-size tonal chips for detail (may wrap). Prefer [DietaryChipsRow] on list cards.
  */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -62,7 +62,7 @@ fun DietaryChips(
     dietary: DietaryAttributes,
     modifier: Modifier = Modifier,
 ) {
-    val tags = remember(dietary) { dietary.toDietTags() }
+    val tags = remember(dietary) { dietary.toDietaryTags() }
     if (tags.isEmpty()) return
 
     val colors = MaterialTheme.colorScheme
@@ -109,8 +109,8 @@ fun DietaryChips(
  * Never wraps — keeps fixed-height cards stable.
  */
 @Composable
-fun DietChipsRow(
-    tags: List<DietTag>,
+fun DietaryChipsRow(
+    tags: List<DietaryTag>,
     modifier: Modifier = Modifier,
     maxVisible: Int = 2,
 ) {
@@ -125,10 +125,10 @@ fun DietChipsRow(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         visible.forEach { tag ->
-            CompactDietChip(label = tag.label(), icon = tag.icon)
+            CompactDietaryChip(label = tag.label(), icon = tag.icon)
         }
         if (overflow > 0) {
-            CompactDietChip(
+            CompactDietaryChip(
                 label = stringResource(R.string.dietary_more_count, overflow),
                 icon = null,
             )
@@ -137,7 +137,7 @@ fun DietChipsRow(
 }
 
 @Composable
-private fun CompactDietChip(
+private fun CompactDietaryChip(
     label: String,
     icon: ImageVector?,
 ) {
@@ -179,19 +179,19 @@ private fun CompactDietChip(
 }
 
 @Composable
-private fun DietTag.label(): String = stringResource(
+private fun DietaryTag.label(): String = stringResource(
     when (this) {
-        DietTag.Vegan -> R.string.dietary_vegan
-        DietTag.Vegetarian -> R.string.dietary_vegetarian
-        DietTag.GlutenFree -> R.string.dietary_gluten_free
-        DietTag.DairyFree -> R.string.dietary_dairy_free
+        DietaryTag.Vegan -> R.string.dietary_vegan
+        DietaryTag.Vegetarian -> R.string.dietary_vegetarian
+        DietaryTag.GlutenFree -> R.string.dietary_gluten_free
+        DietaryTag.DairyFree -> R.string.dietary_dairy_free
     },
 )
 
-private val DietTag.icon: ImageVector
+private val DietaryTag.icon: ImageVector
     get() = when (this) {
-        DietTag.Vegan -> Icons.Outlined.Spa
-        DietTag.Vegetarian -> Icons.Outlined.Eco
-        DietTag.GlutenFree -> Icons.Outlined.Grain
-        DietTag.DairyFree -> Icons.Outlined.WaterDrop
+        DietaryTag.Vegan -> Icons.Outlined.Spa
+        DietaryTag.Vegetarian -> Icons.Outlined.Eco
+        DietaryTag.GlutenFree -> Icons.Outlined.Grain
+        DietaryTag.DairyFree -> Icons.Outlined.WaterDrop
     }

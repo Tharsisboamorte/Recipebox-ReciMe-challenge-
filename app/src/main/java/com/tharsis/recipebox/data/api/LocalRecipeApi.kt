@@ -5,7 +5,7 @@ import com.tharsis.recipebox.data.api.dto.RecipeResponseDto
 import com.tharsis.recipebox.data.local.AssetReader
 import com.tharsis.recipebox.data.mapper.toDomain
 import com.tharsis.recipebox.domain.model.Recipe
-import com.tharsis.recipebox.domain.model.RecipeFilter
+import com.tharsis.recipebox.domain.model.RecipeCatalogFilter
 import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
 
 /**
  * [RecipeApi] backed by bundled `assets/` JSON. Parsed once, held in memory.
- * Filtering reuses domain [RecipeFilter] so semantics match a server search.
+ * Filtering reuses domain [RecipeCatalogFilter] so semantics match a server search.
  */
 class LocalRecipeApi(
     private val assetReader: AssetReader,
@@ -28,20 +28,20 @@ class LocalRecipeApi(
     private val cacheMutex = Mutex()
 
     @Volatile
-    private var cache: List<Recipe>? = null
+    private var cachedRecipes: List<Recipe>? = null
 
     override suspend fun getRecipes(): List<Recipe> = loadRecipes()
 
     override suspend fun searchRecipes(query: RecipeSearchQuery): List<Recipe> =
-        RecipeFilter.apply(loadRecipes(), query)
+        RecipeCatalogFilter.apply(loadRecipes(), query)
 
     override suspend fun getRecipeById(id: String): Recipe? =
         loadRecipes().firstOrNull { it.id == id }
 
     private suspend fun loadRecipes(): List<Recipe> {
-        cache?.let { return it }
+        cachedRecipes?.let { return it }
         return cacheMutex.withLock {
-            cache ?: parseFromAssets().also { cache = it }
+            cachedRecipes ?: parseFromAssets().also { cachedRecipes = it }
         }
     }
 

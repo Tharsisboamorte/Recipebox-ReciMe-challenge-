@@ -3,7 +3,7 @@ package com.tharsis.recipebox.data.repository
 import com.tharsis.recipebox.data.api.RecipeApi
 import com.tharsis.recipebox.data.local.RecipeCache
 import com.tharsis.recipebox.domain.model.Recipe
-import com.tharsis.recipebox.domain.model.RecipeFilter
+import com.tharsis.recipebox.domain.model.RecipeCatalogFilter
 import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 import com.tharsis.recipebox.domain.repository.RecipeRepository
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,12 +17,12 @@ class RecipeRepositoryImpl(
     private val diskCache: RecipeCache,
 ) : RecipeRepository {
 
-    private val diskWarmed = AtomicBoolean(false)
+    private val hasPersistedToDisk = AtomicBoolean(false)
 
     override suspend fun getRecipes(): List<Recipe> = loadCatalog()
 
     override suspend fun searchRecipes(query: RecipeSearchQuery): List<Recipe> =
-        RecipeFilter.apply(loadCatalog(), query)
+        RecipeCatalogFilter.apply(loadCatalog(), query)
 
     override suspend fun getRecipeById(id: String): Recipe? =
         loadCatalog().firstOrNull { it.id == id }
@@ -36,8 +36,8 @@ class RecipeRepositoryImpl(
     }
 
     private suspend fun persistOnce(recipes: List<Recipe>) {
-        if (!diskWarmed.compareAndSet(false, true)) return
+        if (!hasPersistedToDisk.compareAndSet(false, true)) return
         runCatching { diskCache.save(recipes) }
-            .onFailure { diskWarmed.set(false) }
+            .onFailure { hasPersistedToDisk.set(false) }
     }
 }

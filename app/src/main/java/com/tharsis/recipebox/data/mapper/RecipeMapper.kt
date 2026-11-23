@@ -12,7 +12,7 @@ fun RecipeDto.toDomain(): Recipe = Recipe(
     title = title,
     description = description,
     servings = servings,
-    imageUrl = resolveImageSource(imageAsset = imageAsset, imageUrl = imageUrl),
+    imageUri = resolveImageSource(imageAsset = imageAsset, imageUrl = imageUrl),
     ingredients = ingredients,
     instructions = instructions,
     dietary = DietaryAttributes(
@@ -28,7 +28,7 @@ fun Recipe.toDto(): RecipeDto = RecipeDto(
     title = title,
     description = description,
     servings = servings,
-    imageUrl = imageUrl,
+    imageUrl = imageUri,
     imageAsset = null,
     ingredients = ingredients,
     instructions = instructions,

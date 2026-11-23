@@ -14,7 +14,7 @@ object SampleRecipes {
         title = "Classic Margherita Pizza",
         description = "A simple Neapolitan-style pizza with San Marzano tomatoes, fresh mozzarella, and basil.",
         servings = 2,
-        imageUrl = null,
+        imageUri = null,
         ingredients = listOf(
             "250g pizza dough",
             "100g San Marzano tomatoes",
@@ -36,7 +36,7 @@ object SampleRecipes {
         title = "Thai Green Curry with Chicken",
         description = "Fragrant coconut curry with tender chicken, Thai basil, and crisp vegetables.",
         servings = 4,
-        imageUrl = null,
+        imageUri = null,
         ingredients = listOf(
             "500g chicken thigh, sliced",
             "3 tbsp green curry paste",
@@ -55,7 +55,7 @@ object SampleRecipes {
         title = "Chickpea & Spinach Stew",
         description = "A hearty, budget-friendly vegan stew with chickpeas, spinach, and warm spices.",
         servings = 4,
-        imageUrl = null,
+        imageUri = null,
         ingredients = listOf("2 cans chickpeas", "200g spinach", "1 onion"),
         instructions = listOf("Sauté the onion.", "Add chickpeas and simmer.", "Fold in spinach."),
         dietary = DietaryAttributes(
@@ -70,7 +70,7 @@ object SampleRecipes {
         title = "Roasted Vegetable Buddha Bowl",
         description = "A nourishing bowl of roasted veg, quinoa, and lemon-tahini dressing.",
         servings = 2,
-        imageUrl = null,
+        imageUri = null,
         ingredients = listOf("150g quinoa", "1 sweet potato", "1 can chickpeas"),
         instructions = listOf("Roast the vegetables.", "Cook the quinoa.", "Assemble and dress."),
         dietary = DietaryAttributes(vegetarian = true, vegan = true, glutenFree = true, dairyFree = true),
