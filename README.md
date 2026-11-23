@@ -78,7 +78,7 @@ flowchart LR
 | `di` | Koin `appModule`. |
 | `ui/*` | Per-feature screens (list/detail), theme, components, navigation. |
 
-No use-case layer — intentional for a small catalog (same stance as Now in Android).
+No use-case layer. Intentional for a small catalog.
 
 ## Key design decisions
 
@@ -87,7 +87,7 @@ No use-case layer — intentional for a small catalog (same stance as Now in And
 - **No hardcoded UI copy / magic numbers.** User-facing strings live in `strings.xml`; spacing in `Spacing`; knobs in `AppConfig`.
 - **Koin for DI.** Detail ViewModel receives recipe id as a constructor parameter from navigation.
 - **Pure `RecipeCatalogFilter` in domain.** Unit-tested search semantics, identical to what a server-side filter would do.
-- **Coil 3** + bundled `imageAsset` photos (offline). Memory cache only — no Coil disk cache, because assets are already on device.
+- **Coil 3** + bundled `imageAsset` photos (offline). Memory cache only, no Coil disk cache, because assets are already on device.
 - **Recipe catalog disk cache** warms once per process via `RecipeDiskCache` so a failed re-read of assets can still serve the last good catalog.
 - **R8 for release** builds.
 - **Always-light Material 3 theme** with brand green (`#129575`).
@@ -115,7 +115,7 @@ No use-case layer — intentional for a small catalog (same stance as Now in And
 - No server-side pagination/sorting; the full collection is loaded at once.
 - Text search is substring-based (no fuzzy matching or ranking).
 - Instrumented UI tests are not included; coverage focuses on search/filter, DTO mapping, and repository cache fallbacks.
-- Several sample Unsplash links in JSON are photo *pages*, not direct image files — harmless today because every recipe has an `imageAsset`.
+- Several sample Unsplash links in JSON are photo *pages*, not direct image files. harmless today because every recipe has an `imageAsset`.
 
 ## Tech stack
 
