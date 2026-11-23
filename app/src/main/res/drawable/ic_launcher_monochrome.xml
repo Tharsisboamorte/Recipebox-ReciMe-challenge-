@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Alpha-only silhouette for Android 13+ themed icons (system applies tint). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Open book -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M26,40c0,0 12,-6 28,-6s28,6 28,6v40c0,0 -12,-6 -28,-6s-28,6 -28,6z" />
+    <!-- Steam left -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M48,24c-1.5,3 -1,5.5 0.5,7.5S50,36 48.5,38h4c2,-2.5 1.5,-5 0,-7s1.5,-5 1.5,-7z" />
+    <!-- Steam right -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M56,22c-1.5,3 -1,5.5 0.5,7.5S58,34 56.5,36h4c2,-2.5 1.5,-5 0,-7s1.5,-5 1.5,-7z" />
+    <!-- Leaf -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M70,68c4,-1 9,2 10,7c-4,3 -9,2 -11,1c1,-2 0,-5 1,-8z" />
+</vector>
