@@ -1,8 +1,7 @@
-package com.tharsis.recipebox.core.config
+package com.tharsis.recipebox.core
 
 /**
- * Non-UI constants that would otherwise be scattered as magic numbers/strings.
- * Keep user-facing copy in `res/values/strings.xml`; keep design tokens in `ui/theme`.
+ * Non-UI constants. User-facing copy → `strings.xml`; design tokens → `ui/theme`.
  */
 object AppConfig {
     object Data {

@@ -1,13 +1,13 @@
 package com.tharsis.recipebox.di
 
-import com.tharsis.recipebox.data.api.AssetReader
-import com.tharsis.recipebox.data.api.ContextAssetReader
 import com.tharsis.recipebox.data.api.LocalRecipeApi
 import com.tharsis.recipebox.data.api.RecipeApi
-import com.tharsis.recipebox.data.cache.RecipeCache
-import com.tharsis.recipebox.data.cache.RecipeDiskCache
-import com.tharsis.recipebox.data.repository.RecipeRepository
+import com.tharsis.recipebox.data.local.AssetReader
+import com.tharsis.recipebox.data.local.ContextAssetReader
+import com.tharsis.recipebox.data.local.RecipeCache
+import com.tharsis.recipebox.data.local.RecipeDiskCache
 import com.tharsis.recipebox.data.repository.RecipeRepositoryImpl
+import com.tharsis.recipebox.domain.repository.RecipeRepository
 import com.tharsis.recipebox.ui.detail.RecipeDetailViewModel
 import com.tharsis.recipebox.ui.list.RecipeListViewModel
 import kotlinx.serialization.json.Json
@@ -16,9 +16,8 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 /**
- * Koin graph for the whole app. Interfaces are bound to their implementations
- * here so swapping, e.g., [LocalRecipeApi] for a network-backed one is a
- * one-line change with no impact on consumers.
+ * Koin graph. Domain interfaces bind to data implementations here so swapping
+ * [LocalRecipeApi] for a network client is a one-line change.
  */
 val appModule = module {
     single {

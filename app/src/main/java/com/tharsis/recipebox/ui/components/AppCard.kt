@@ -13,26 +13,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tharsis.recipebox.ui.theme.BrandGreen
-import com.tharsis.recipebox.ui.theme.CardSurface
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextPrimary
-import com.tharsis.recipebox.ui.theme.TextSecondary
 
 /**
- * Shared step/ingredient card: soft gray fill + thin green border so the list
- * feels on-brand without looking as flat as a plain gray block.
+ * Generic titled body card. Colors come from [MaterialTheme.colorScheme]
+ * so light and dark themes stay readable.
  */
 @Composable
-fun ContentCard(title: String, body: String, modifier: Modifier = Modifier) {
+fun AppCard(title: String, body: String, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(Spacing.cardRadius)
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = 1.5.dp, color = BrandGreen, shape = shape),
+            .border(width = 1.5.dp, color = colors.primary, shape = shape),
         shape = shape,
-        color = CardSurface,
+        color = colors.surfaceVariant,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
     ) {
@@ -46,12 +43,12 @@ fun ContentCard(title: String, body: String, modifier: Modifier = Modifier) {
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary,
+                color = colors.onSurface,
             )
             Text(
                 text = body,
                 style = MaterialTheme.typography.bodyMedium,
-                color = TextSecondary,
+                color = colors.onSurfaceVariant,
                 modifier = Modifier.padding(top = Spacing.xs),
             )
         }
@@ -60,9 +57,9 @@ fun ContentCard(title: String, body: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-private fun ContentCardPreview() {
+private fun AppCardPreview() {
     RecipeBoxTheme {
-        ContentCard(
+        AppCard(
             title = "Step 1",
             body = "Lorem ipsum dolor sit amet consectetur. Elit pretium cras mattis.",
             modifier = Modifier.padding(Spacing.lg),
