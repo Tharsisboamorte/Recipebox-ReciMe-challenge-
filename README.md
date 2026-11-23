@@ -1,6 +1,22 @@
 # RecipeBox
 
+<div style="text-align: center">
+
+![RecipeBox logo](docs/screenshots/logo.png)
+
+</div>
+
 A native Android app for browsing, searching, and filtering cooking recipes, built with **Kotlin** and **Jetpack Compose**. Recipe data is loaded from a bundled JSON file that is treated as if it were a real search API.
+
+## Screenshots
+
+| Home (grid) | Home (list) | Filters |
+|:---:|:---:|:---:|
+| ![Grid](docs/screenshots/home-grid.png) | ![List](docs/screenshots/home-list.png) | ![Filters](docs/screenshots/filters.png) |
+
+| Detail · Ingredients | Detail · Procedure |
+|:---:|:---:|
+| ![Ingredients](docs/screenshots/detail-ingredients.png) | ![Procedure](docs/screenshots/detail-procedure.png) |
 
 ## Features
 
@@ -33,61 +49,52 @@ The generated APK is at `app/build/outputs/apk/debug/app-debug.apk`. Open the pr
 
 ## Architecture
 
-The app follows **MVVM with a light MVI shell** (ViaUnica-inspired, single-module): sealed `Intent` → ViewModel reducer → immutable `UiState` + one-shot `SideEffect`s. Screens stay dumb (`state` + `onIntent` only).
+The app follows **MVVM + minimal Clean Architecture** with a light MVI shell (ViaUnica-inspired, single-module): sealed `Intent` → ViewModel → immutable `UiState` + `SideEffect`s. Dependencies point inward: **ui → domain ← data**.
 
 ```
-Route (collect state/effects) -> Screen(state, onIntent) -> ViewModel.onIntent
-ViewModel -> RecipeRepository -> RecipeApi -> assets/recipes.json
-                       \-> RecipeCache (filesDir)  [offline fallback]
-Images: assets/images/*.jpg via imageAsset (Coil + disk cache)
+UI (Route/Screen/VM) -> domain.RecipeRepository
+                           ↑
+data.RecipeRepositoryImpl -> RecipeApi / RecipeCache
+RecipeDto --mapper--> domain.Recipe
 ```
 
 ```mermaid
 flowchart LR
-  Route --> Screen
-  Screen -->|Intent| VM[ViewModel]
-  VM -->|UiState| Screen
-  VM -->|SideEffect| Route
-  VM --> Repo[RecipeRepository]
-  Repo --> Api[RecipeApi]
-  Repo --> Cache[RecipeDiskCache]
-  Api --> Json[assets/recipes.json]
+  UI[ui] --> Domain[domain]
+  Data[data] --> Domain
+  Data --> Api[RecipeApi / local]
+  Data --> Mapper[mapper]
 ```
 
 ### Package layout (`com.tharsis.recipebox`)
 
 | Package | Responsibility |
 |---------|----------------|
-| `core/config` | Non-UI constants (`AppConfig`) — debounce, cache paths, image sizes. |
-| `data/model` | Clean domain models (`Recipe`, `DietaryAttributes`). |
-| `data/api` | `RecipeApi` contract, `LocalRecipeApi`, `RecipeFilter`, `AssetReader`. |
-| `data/api/dto` | Serialization DTOs + mappers. |
-| `data/repository` | Offline-first `RecipeRepository`. |
-| `data/cache` | `RecipeCache` / `RecipeDiskCache`. |
+| `core` | Non-UI constants (`AppConfig`). |
+| `domain/model` | Pure Kotlin models (`Recipe`, `RecipeSearchQuery`, `RecipeFilter`). |
+| `domain/repository` | `RecipeRepository` **interface** only. |
+| `data/api` | `RecipeApi`, `LocalRecipeApi`, `dto/` (`@Serializable`). |
+| `data/local` | `AssetReader`, `RecipeCache` / `RecipeDiskCache`. |
+| `data/mapper` | DTO ↔ domain mapping. |
+| `data/repository` | `RecipeRepositoryImpl` (offline-first). |
 | `di` | Koin `appModule`. |
-| `ui/theme` | Color, Type, Theme, `Spacing` tokens. |
-| `ui/list` | Intent / UiState / SideEffect / ViewModel / Screen + cards/filters. |
-| `ui/detail` | Intent / UiState / SideEffect / ViewModel / Screen. |
-| `ui/components` | Shared composables. |
-| `ui/navigation` | `RecipeNavHost` + routes. |
-| `ui/preview` | Static sample data for `@Preview`. |
+| `ui/*` | Per-feature screens (list/detail), theme, components, navigation. |
+
+No use-case layer — intentional for a small catalog (same stance as Now in Android).
 
 ### Why this shape
 
-Even though data comes from a local file, the data layer is modeled as a suspendable, query-driven API (`RecipeApi.searchRecipes(query)`). Swapping the bundled JSON for a real backend is a one-line change in `di/AppModule.kt`, no UI or ViewModel changes required. We intentionally **did not** split into multi-modules or a full design-system library — that would be overkill for this challenge.
+The data layer is a suspendable, query-driven API so a real backend is a one-line swap in `AppModule`. Domain stays annotation-free; serialization stays on DTOs.
 
 ## Key design decisions
 
-- **Intent / UiState / SideEffect.** List and detail ViewModels expose a single `onIntent` entry and emit navigation as side effects (Channel), matching the ViaUnica PDP pattern without its module graph.
-- **No hardcoded UI copy / magic numbers.** User-facing strings live in `strings.xml`; spacing/radii in `Spacing`; timings and file names in `AppConfig`.
-- **Koin for DI.** The detail ViewModel receives its recipe id as a Koin parameter from the navigation argument.
-- **kotlinx.serialization** for JSON. A DTO layer keeps the JSON contract decoupled from the domain model.
-- **Search modeled as an endpoint.** Pure `RecipeFilter` is unit-testable and identical to what a server-side search would return.
-- **Coil 3** with memory + disk cache; bundled `imageAsset` photos load offline.
-- **Offline recipe cache.** `RecipeRepository` persists each successful API payload via `RecipeDiskCache`.
-- **R8 for release.** `minifyEnabled` + `shrinkResources` with focused ProGuard keeps for serialization / Coil / Koin.
-- **Formatting.** `.editorconfig` + Spotless (ktlint) — run `./gradlew spotlessApply`.
-- **Native Compose motion** (no extra animation SDK): `SharedTransitionLayout` for the list→detail hero transition, `animateItem()` for grid changes, press-scale on cards, and nav fade/slide transitions. Search input is debounced (250 ms) so results update smoothly while typing.
+- **Clean-ish dependency rule.** UI depends on `domain`; `data` implements domain contracts and owns DTOs/mappers.
+- **Intent / UiState / SideEffect.** ViaUnica-style presentation without multi-module ceremony.
+- **No hardcoded UI copy / magic numbers.** `strings.xml`, `Spacing`, `AppConfig`.
+- **Koin for DI.** Detail ViewModel receives recipe id as a parameter.
+- **Pure `RecipeFilter` in domain.** Unit-tested search semantics, identical to a server-side filter.
+- **Coil 3** + bundled `imageAsset` photos (offline). Disk catalog cache warms once per process.
+- **R8 for release** + Spotless/ktlint formatting.
 
 ## Filter semantics
 
