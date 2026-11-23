@@ -14,24 +14,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Precision
 import coil3.size.Size
+import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.ui.theme.Spacing
 
 /**
  * Absolute pixel decode caps (NOT density-scaled). Density-based Dp targets
- * ballooned to 880×1120 on xxxhdpi emulators — larger than the source — so
- * Coil never downsampled and native heap stayed high while scrolling.
+ * ballooned on xxxhdpi — larger than the source — so Coil never downsampled
+ * and native heap stayed high while scrolling.
  */
 enum class RecipeImageSize(val widthPx: Int, val heightPx: Int) {
-    /** Grid / list thumbnails. */
-    Thumbnail(360, 480),
-
-    /** Detail hero banner. */
-    Hero(900, 560),
+    Thumbnail(AppConfig.Image.THUMBNAIL_WIDTH_PX, AppConfig.Image.THUMBNAIL_HEIGHT_PX),
+    Hero(AppConfig.Image.HERO_WIDTH_PX, AppConfig.Image.HERO_HEIGHT_PX),
 }
 
 /**
@@ -60,7 +58,7 @@ fun RecipeImage(
                 .precision(Precision.INEXACT)
                 .memoryCacheKey(cacheKey)
                 .diskCacheKey(cacheKey)
-                .crossfade(120)
+                .crossfade(AppConfig.Image.REQUEST_CROSSFADE_MS)
                 .build()
         }
     }
@@ -74,7 +72,7 @@ fun RecipeImage(
                 imageVector = Icons.Outlined.RestaurantMenu,
                 contentDescription = contentDescription,
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(Spacing.xl * 2),
             )
         } else {
             AsyncImage(

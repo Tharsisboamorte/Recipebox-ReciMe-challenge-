@@ -6,6 +6,7 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.di.appModule
 import okio.Path.Companion.toOkioPath
 import org.koin.android.ext.koin.androidContext
@@ -24,16 +25,20 @@ class RecipeBoxApp : Application() {
             ImageLoader.Builder(context)
                 .memoryCache {
                     MemoryCache.Builder()
-                        .maxSizePercent(context, 0.15)
+                        .maxSizePercent(context, AppConfig.Image.MEMORY_CACHE_PERCENT)
                         .build()
                 }
                 .diskCache {
                     DiskCache.Builder()
-                        .directory(context.cacheDir.resolve("recipe_image_cache").toOkioPath())
-                        .maxSizeBytes(64L * 1024L * 1024L)
+                        .directory(
+                            context.cacheDir
+                                .resolve(AppConfig.Image.DISK_CACHE_DIR)
+                                .toOkioPath(),
+                        )
+                        .maxSizeBytes(AppConfig.Image.DISK_CACHE_MAX_BYTES)
                         .build()
                 }
-                .crossfade(180)
+                .crossfade(AppConfig.Image.CROSSFADE_MS)
                 .build()
         }
         startKoin {

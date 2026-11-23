@@ -1,5 +1,6 @@
 package com.tharsis.recipebox.data.api.dto
 
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.data.model.DietaryAttributes
 import com.tharsis.recipebox.data.model.Recipe
 import kotlinx.serialization.SerialName
@@ -13,9 +14,7 @@ import kotlinx.serialization.Serializable
  * endpoint only touches this layer and its mapper.
  */
 @Serializable
-data class RecipeResponseDto(
-    @SerialName("recipes") val recipes: List<RecipeDto> = emptyList(),
-)
+data class RecipeResponseDto(@SerialName("recipes") val recipes: List<RecipeDto> = emptyList())
 
 @Serializable
 data class RecipeDto(
@@ -63,8 +62,10 @@ fun RecipeDto.toDomain(): Recipe = Recipe(
 fun resolveImageSource(imageAsset: String?, imageUrl: String?): String? {
     val asset = imageAsset?.trim().orEmpty()
     if (asset.isNotEmpty()) {
-        val fileName = asset.removePrefix("images/")
-        return "file:///android_asset/images/$fileName"
+        val fileName = asset
+            .removePrefix("${AppConfig.Data.IMAGE_ASSET_DIR}/")
+            .removePrefix("images/")
+        return AppConfig.Data.IMAGE_ASSET_URI_PREFIX + fileName
     }
     return imageUrl?.takeIf { it.isNotBlank() }
 }

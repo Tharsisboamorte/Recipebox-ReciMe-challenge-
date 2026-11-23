@@ -1,3 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">RecipeBox</string>
+
+    <!-- List -->
+    <string name="list_title">Search recipes</string>
+    <string name="search_hint">Search recipe</string>
+    <string name="cd_clear_search">Clear search</string>
+    <string name="cd_filters">Filters</string>
+    <string name="cd_switch_to_list">Switch to list</string>
+    <string name="cd_switch_to_grid">Switch to grid</string>
+    <string name="empty_title">No recipes found</string>
+    <string name="empty_message">Try adjusting your search or clearing some filters.</string>
+    <string name="empty_clear_filters">Clear filters</string>
+    <string name="error_title">Couldn\'t load recipes</string>
+    <string name="error_retry">Retry</string>
+    <string name="error_generic">Something went wrong loading recipes.</string>
+
+    <!-- Filters -->
+    <string name="filter_title">Filter Search</string>
+    <string name="filter_clear">Clear</string>
+    <string name="filter_apply">Filter</string>
+    <string name="filter_section_diet">Diet</string>
+    <string name="filter_section_servings">Servings</string>
+    <string name="filter_all">All</string>
+    <string name="filter_vegetarian">Vegetarian</string>
+    <string name="filter_servings_any">Any</string>
+    <string name="filter_servings_1_2">1–2</string>
+    <string name="filter_servings_3_4">3–4</string>
+    <string name="filter_servings_5_plus">5+</string>
+    <string name="filter_must_include">Must include</string>
+    <string name="filter_must_exclude">Must not include</string>
+    <string name="filter_include_hint">e.g. garlic, chicken</string>
+    <string name="filter_exclude_hint">e.g. peanuts, beef</string>
+    <string name="cd_add_ingredient">Add ingredient</string>
+    <string name="cd_remove_ingredient">Remove %1$s</string>
+
+    <!-- Detail -->
+    <string name="cd_back">Back</string>
+    <string name="detail_tab_ingredient">Ingredient</string>
+    <string name="detail_tab_procedure">Procedure</string>
+    <string name="detail_ingredient_n">Ingredient %1$d</string>
+    <string name="detail_step_n">Step %1$d</string>
+    <string name="detail_items_count">%1$d Items</string>
+    <string name="detail_steps_count">%1$d Steps</string>
+    <string name="detail_not_found">Recipe not found.</string>
+    <string name="detail_load_failed">Couldn\'t load this recipe.</string>
+    <plurals name="servings_label">
+        <item quantity="one">%1$d serve</item>
+        <item quantity="other">%1$d serves</item>
+    </plurals>
+
+    <!-- Dietary -->
+    <string name="dietary_vegetarian">Vegetarian</string>
+    <string name="dietary_vegan">Vegan</string>
+    <string name="dietary_gluten_free">Gluten-Free</string>
+    <string name="dietary_dairy_free">Dairy-Free</string>
 </resources>

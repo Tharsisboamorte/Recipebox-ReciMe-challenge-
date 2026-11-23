@@ -45,12 +45,7 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun RecipeBoxTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable () -> Unit,
-) {
-    // Brand-first: keep the green/white identity even when the system is dark.
-    //TODO: MAYBE ADD A DARK MODE WITH GREEN AND BLACK
+fun RecipeBoxTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
     val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
 
     MaterialTheme(

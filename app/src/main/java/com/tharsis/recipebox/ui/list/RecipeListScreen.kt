@@ -28,27 +28,32 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.tharsis.recipebox.R
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.ui.components.EmptyResultState
 import com.tharsis.recipebox.ui.components.ErrorState
 import com.tharsis.recipebox.ui.components.LoadingState
 import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 import com.tharsis.recipebox.ui.theme.TextPrimary
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
+/**
+ * Route host: collects state + side effects, wires Android/nav concerns.
+ * The dumb [RecipeListScreen] only sees [RecipeListUiState] and [RecipeListIntent].
+ */
 @Composable
 fun RecipeListRoute(
     onRecipeClick: (String) -> Unit,
@@ -58,15 +63,18 @@ fun RecipeListRoute(
     viewModel: RecipeListViewModel = koinViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.sideEffects.collect { effect ->
+            when (effect) {
+                is RecipeListSideEffect.OpenDetail -> onRecipeClick(effect.recipeId)
+            }
+        }
+    }
+
     RecipeListScreen(
-        uiState = uiState,
-        onSearchTextChange = viewModel::onSearchTextChange,
-        onClearSearchText = viewModel::clearSearchText,
-        onFiltersChange = viewModel::onFiltersChange,
-        onClearFilters = viewModel::clearFilters,
-        onToggleLayout = viewModel::toggleLayoutMode,
-        onRetry = viewModel::retry,
-        onRecipeClick = onRecipeClick,
+        state = uiState,
+        onIntent = viewModel::onIntent,
         modifier = modifier,
         sharedScope = sharedScope,
         animatedScope = animatedScope,
@@ -76,21 +84,13 @@ fun RecipeListRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeListScreen(
-    uiState: RecipeListUiState,
-    onSearchTextChange: (String) -> Unit,
-    onClearSearchText: () -> Unit,
-    onFiltersChange: (RecipeFilters) -> Unit,
-    onClearFilters: () -> Unit,
-    onToggleLayout: () -> Unit,
-    onRetry: () -> Unit,
-    onRecipeClick: (String) -> Unit,
+    state: RecipeListUiState,
+    onIntent: (RecipeListIntent) -> Unit,
     modifier: Modifier = Modifier,
     sharedScope: SharedTransitionScope? = null,
     animatedScope: AnimatedVisibilityScope? = null,
 ) {
     var showFilters by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -99,7 +99,7 @@ fun RecipeListScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Search recipes",
+                        text = stringResource(R.string.list_title),
                         fontWeight = FontWeight.Bold,
                         color = TextPrimary,
                     )
@@ -112,25 +112,27 @@ fun RecipeListScreen(
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
             RecipeSearchBar(
-                searchText = uiState.searchText,
-                activeFilterCount = uiState.filters.activeCount,
-                layoutMode = uiState.layoutMode,
-                onSearchTextChange = onSearchTextChange,
-                onClearText = onClearSearchText,
+                searchText = state.searchText,
+                activeFilterCount = state.filters.activeCount,
+                layoutMode = state.layoutMode,
+                onSearchTextChange = { onIntent(RecipeListIntent.SearchChanged(it)) },
+                onClearText = { onIntent(RecipeListIntent.ClearSearch) },
                 onFilterClick = { showFilters = true },
-                onToggleLayout = onToggleLayout,
+                onToggleLayout = { onIntent(RecipeListIntent.ToggleLayout) },
             )
 
             when {
-                uiState.isLoading -> LoadingState()
-                uiState.errorMessage != null -> ErrorState(
-                    message = uiState.errorMessage,
-                    onRetry = onRetry,
+                state.isLoading -> LoadingState()
+                state.errorMessage != null -> ErrorState(
+                    message = state.errorMessage,
+                    onRetry = { onIntent(RecipeListIntent.Retry) },
                 )
-                uiState.isEmptyResult -> EmptyResultState(onClearFilters = onClearFilters)
+                state.isEmptyResult -> EmptyResultState(
+                    onClearFilters = { onIntent(RecipeListIntent.ClearFilters) },
+                )
                 else -> RecipeResults(
-                    uiState = uiState,
-                    onRecipeClick = onRecipeClick,
+                    state = state,
+                    onIntent = onIntent,
                     sharedScope = sharedScope,
                     animatedScope = animatedScope,
                 )
@@ -140,36 +142,34 @@ fun RecipeListScreen(
 
     if (showFilters) {
         FilterBottomSheet(
-            filters = uiState.filters,
-            sheetState = sheetState,
-            onFiltersChange = onFiltersChange,
-            onClearAll = onClearFilters,
-            onDismiss = {
-                scope.launch { sheetState.hide() }.invokeOnCompletion {
-                    if (!sheetState.isVisible) showFilters = false
-                }
-            },
+            filters = state.filters,
+            onFiltersChange = { onIntent(RecipeListIntent.FiltersChanged(it)) },
+            onClearAll = { onIntent(RecipeListIntent.ClearFilters) },
+            onDismiss = { showFilters = false },
         )
     }
 }
 
 @Composable
 private fun RecipeResults(
-    uiState: RecipeListUiState,
-    onRecipeClick: (String) -> Unit,
+    state: RecipeListUiState,
+    onIntent: (RecipeListIntent) -> Unit,
     sharedScope: SharedTransitionScope?,
     animatedScope: AnimatedVisibilityScope?,
 ) {
+    val enterMs = AppConfig.Motion.LAYOUT_TRANSITION_MS
+    val exitFadeMs = AppConfig.Motion.LAYOUT_EXIT_FADE_MS
+
     AnimatedContent(
-        targetState = uiState.layoutMode,
+        targetState = state.layoutMode,
         transitionSpec = {
             val forward = targetState == RecipeLayoutMode.List
             if (forward) {
-                (slideInHorizontally(tween(280)) { it / 3 } + fadeIn(tween(280))) togetherWith
-                    (slideOutHorizontally(tween(280)) { -it / 3 } + fadeOut(tween(180)))
+                (slideInHorizontally(tween(enterMs)) { it / 3 } + fadeIn(tween(enterMs))) togetherWith
+                    (slideOutHorizontally(tween(enterMs)) { -it / 3 } + fadeOut(tween(exitFadeMs)))
             } else {
-                (slideInHorizontally(tween(280)) { -it / 3 } + fadeIn(tween(280))) togetherWith
-                    (slideOutHorizontally(tween(280)) { it / 3 } + fadeOut(tween(180)))
+                (slideInHorizontally(tween(enterMs)) { -it / 3 } + fadeIn(tween(enterMs))) togetherWith
+                    (slideOutHorizontally(tween(enterMs)) { it / 3 } + fadeOut(tween(exitFadeMs)))
             }.using(SizeTransform(clip = false))
         },
         label = "layoutModeTransition",
@@ -177,14 +177,14 @@ private fun RecipeResults(
     ) { mode ->
         when (mode) {
             RecipeLayoutMode.Grid -> RecipeGrid(
-                uiState = uiState,
-                onRecipeClick = onRecipeClick,
+                state = state,
+                onIntent = onIntent,
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
             )
             RecipeLayoutMode.List -> RecipeLazyList(
-                uiState = uiState,
-                onRecipeClick = onRecipeClick,
+                state = state,
+                onIntent = onIntent,
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
             )
@@ -194,24 +194,24 @@ private fun RecipeResults(
 
 @Composable
 private fun RecipeGrid(
-    uiState: RecipeListUiState,
-    onRecipeClick: (String) -> Unit,
+    state: RecipeListUiState,
+    onIntent: (RecipeListIntent) -> Unit,
     sharedScope: SharedTransitionScope?,
     animatedScope: AnimatedVisibilityScope?,
 ) {
     val gridState = rememberLazyGridState()
     LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
+        columns = GridCells.Fixed(AppConfig.Grid.COLUMN_COUNT),
         state = gridState,
-        contentPadding = PaddingValues(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp),
+        contentPadding = PaddingValues(Spacing.lg),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md + Spacing.xxs),
+        verticalArrangement = Arrangement.spacedBy(Spacing.md + Spacing.xxs),
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(items = uiState.recipes, key = { it.id }) { recipe ->
+        items(items = state.recipes, key = { it.id }) { recipe ->
             RecipeCard(
                 recipe = recipe,
-                onClick = { onRecipeClick(recipe.id) },
+                onClick = { onIntent(RecipeListIntent.RecipeClicked(recipe.id)) },
                 layoutMode = RecipeLayoutMode.Grid,
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
@@ -222,22 +222,22 @@ private fun RecipeGrid(
 
 @Composable
 private fun RecipeLazyList(
-    uiState: RecipeListUiState,
-    onRecipeClick: (String) -> Unit,
+    state: RecipeListUiState,
+    onIntent: (RecipeListIntent) -> Unit,
     sharedScope: SharedTransitionScope?,
     animatedScope: AnimatedVisibilityScope?,
 ) {
     val listState = rememberLazyListState()
     LazyColumn(
         state = listState,
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        contentPadding = PaddingValues(Spacing.lg),
+        verticalArrangement = Arrangement.spacedBy(Spacing.md),
         modifier = Modifier.fillMaxSize(),
     ) {
-        items(items = uiState.recipes, key = { it.id }) { recipe ->
+        items(items = state.recipes, key = { it.id }) { recipe ->
             RecipeCard(
                 recipe = recipe,
-                onClick = { onRecipeClick(recipe.id) },
+                onClick = { onIntent(RecipeListIntent.RecipeClicked(recipe.id)) },
                 layoutMode = RecipeLayoutMode.List,
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
@@ -251,14 +251,8 @@ private fun RecipeLazyList(
 private fun RecipeListScreenPreview() {
     RecipeBoxTheme {
         RecipeListScreen(
-            uiState = RecipeListUiState(isLoading = false, recipes = SampleRecipes.all),
-            onSearchTextChange = {},
-            onClearSearchText = {},
-            onFiltersChange = {},
-            onClearFilters = {},
-            onToggleLayout = {},
-            onRetry = {},
-            onRecipeClick = {},
+            state = RecipeListUiState(isLoading = false, recipes = SampleRecipes.all),
+            onIntent = {},
         )
     }
 }
@@ -268,14 +262,12 @@ private fun RecipeListScreenPreview() {
 private fun RecipeListScreenEmptyPreview() {
     RecipeBoxTheme {
         RecipeListScreen(
-            uiState = RecipeListUiState(isLoading = false, recipes = emptyList(), searchText = "zzz"),
-            onSearchTextChange = {},
-            onClearSearchText = {},
-            onFiltersChange = {},
-            onClearFilters = {},
-            onToggleLayout = {},
-            onRetry = {},
-            onRecipeClick = {},
+            state = RecipeListUiState(
+                isLoading = false,
+                recipes = emptyList(),
+                searchText = "zzz",
+            ),
+            onIntent = {},
         )
     }
 }

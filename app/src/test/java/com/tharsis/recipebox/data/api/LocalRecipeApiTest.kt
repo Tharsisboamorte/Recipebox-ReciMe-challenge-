@@ -13,7 +13,10 @@ import org.junit.Test
  */
 class LocalRecipeApiTest {
 
-    private val json = Json { ignoreUnknownKeys = true; isLenient = true }
+    private val json = Json {
+        ignoreUnknownKeys = true
+        isLenient = true
+    }
 
     private val validPayload = """
         {

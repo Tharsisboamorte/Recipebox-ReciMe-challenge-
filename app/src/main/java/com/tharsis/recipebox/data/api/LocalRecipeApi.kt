@@ -1,5 +1,6 @@
 package com.tharsis.recipebox.data.api
 
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.data.api.dto.RecipeResponseDto
 import com.tharsis.recipebox.data.api.dto.toDomain
 import com.tharsis.recipebox.data.model.Recipe
@@ -26,6 +27,7 @@ class LocalRecipeApi(
 ) : RecipeApi {
 
     private val cacheMutex = Mutex()
+
     @Volatile
     private var cache: List<Recipe>? = null
 
@@ -34,8 +36,7 @@ class LocalRecipeApi(
     override suspend fun searchRecipes(query: RecipeSearchQuery): List<Recipe> =
         RecipeFilter.apply(loadRecipes(), query)
 
-    override suspend fun getRecipeById(id: String): Recipe? =
-        loadRecipes().firstOrNull { it.id == id }
+    override suspend fun getRecipeById(id: String): Recipe? = loadRecipes().firstOrNull { it.id == id }
 
     private suspend fun loadRecipes(): List<Recipe> {
         cache?.let { return it }
@@ -55,7 +56,7 @@ class LocalRecipeApi(
     }
 
     companion object {
-        const val DEFAULT_FILE_NAME = "recipes.json"
+        const val DEFAULT_FILE_NAME = AppConfig.Data.RECIPES_ASSET_FILE
     }
 }
 

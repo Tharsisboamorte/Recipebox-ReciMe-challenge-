@@ -25,11 +25,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.tharsis.recipebox.R
 import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 import com.tharsis.recipebox.ui.theme.TextOnGreen
 import com.tharsis.recipebox.ui.theme.TextSecondary
 
@@ -45,24 +48,29 @@ fun RecipeSearchBar(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = modifier.padding(horizontal = Spacing.lg, vertical = Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
         OutlinedTextField(
             value = searchText,
             onValueChange = onSearchTextChange,
             modifier = Modifier.weight(1f),
             singleLine = true,
-            shape = RoundedCornerShape(14.dp),
-            placeholder = { Text("Search recipe", color = TextSecondary) },
+            shape = RoundedCornerShape(Spacing.cardRadius),
+            placeholder = {
+                Text(stringResource(R.string.search_hint), color = TextSecondary)
+            },
             leadingIcon = {
                 Icon(Icons.Filled.Search, contentDescription = null, tint = TextSecondary)
             },
             trailingIcon = {
                 if (searchText.isNotEmpty()) {
                     IconButton(onClick = onClearText) {
-                        Icon(Icons.Filled.Close, contentDescription = "Clear search")
+                        Icon(
+                            Icons.Filled.Close,
+                            contentDescription = stringResource(R.string.cd_clear_search),
+                        )
                     }
                 }
             },
@@ -80,7 +88,7 @@ fun RecipeSearchBar(
                 containerColor = BrandGreen.copy(alpha = 0.12f),
                 contentColor = BrandGreen,
             ),
-            modifier = Modifier.size(48.dp),
+            modifier = Modifier.size(Spacing.iconButton),
         ) {
             Icon(
                 imageVector = if (layoutMode == RecipeLayoutMode.Grid) {
@@ -88,11 +96,13 @@ fun RecipeSearchBar(
                 } else {
                     Icons.Filled.GridView
                 },
-                contentDescription = if (layoutMode == RecipeLayoutMode.Grid) {
-                    "Switch to list"
-                } else {
-                    "Switch to grid"
-                },
+                contentDescription = stringResource(
+                    if (layoutMode == RecipeLayoutMode.Grid) {
+                        R.string.cd_switch_to_list
+                    } else {
+                        R.string.cd_switch_to_grid
+                    },
+                ),
             )
         }
 
@@ -103,9 +113,12 @@ fun RecipeSearchBar(
                     containerColor = BrandGreen,
                     contentColor = TextOnGreen,
                 ),
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(Spacing.iconButton),
             ) {
-                Icon(Icons.Filled.Tune, contentDescription = "Filters")
+                Icon(
+                    Icons.Filled.Tune,
+                    contentDescription = stringResource(R.string.cd_filters),
+                )
             }
             if (activeFilterCount > 0) {
                 Badge(

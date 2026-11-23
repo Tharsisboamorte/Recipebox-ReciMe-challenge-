@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,10 +39,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import com.tharsis.recipebox.R
 import com.tharsis.recipebox.data.model.Recipe
 import com.tharsis.recipebox.ui.components.ContentCard
 import com.tharsis.recipebox.ui.components.DietaryChips
@@ -54,6 +57,7 @@ import com.tharsis.recipebox.ui.components.sharedElementModifier
 import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 import com.tharsis.recipebox.ui.theme.TextOnGreen
 import com.tharsis.recipebox.ui.theme.TextPrimary
 import com.tharsis.recipebox.ui.theme.TextSecondary
@@ -72,10 +76,18 @@ fun RecipeDetailRoute(
     viewModel: RecipeDetailViewModel = koinViewModel { parametersOf(recipeId) },
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(viewModel) {
+        viewModel.sideEffects.collect { effect ->
+            when (effect) {
+                RecipeDetailSideEffect.NavigateBack -> onBack()
+            }
+        }
+    }
+
     RecipeDetailScreen(
-        uiState = uiState,
-        onBack = onBack,
-        onRetry = viewModel::load,
+        state = uiState,
+        onIntent = viewModel::onIntent,
         modifier = modifier,
         sharedScope = sharedScope,
         animatedScope = animatedScope,
@@ -85,9 +97,8 @@ fun RecipeDetailRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RecipeDetailScreen(
-    uiState: RecipeDetailUiState,
-    onBack: () -> Unit,
-    onRetry: () -> Unit,
+    state: RecipeDetailUiState,
+    onIntent: (RecipeDetailIntent) -> Unit,
     modifier: Modifier = Modifier,
     sharedScope: SharedTransitionScope? = null,
     animatedScope: AnimatedVisibilityScope? = null,
@@ -99,10 +110,10 @@ fun RecipeDetailScreen(
             TopAppBar(
                 title = { },
                 navigationIcon = {
-                    IconButton(onClick = onBack) {
+                    IconButton(onClick = { onIntent(RecipeDetailIntent.Back) }) {
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
+                            contentDescription = stringResource(R.string.cd_back),
                             tint = TextPrimary,
                         )
                     }
@@ -114,16 +125,17 @@ fun RecipeDetailScreen(
         },
     ) { innerPadding ->
         when {
-            uiState.isLoading -> LoadingState(Modifier.padding(innerPadding))
-            uiState.recipe != null -> RecipeDetailContent(
-                recipe = uiState.recipe,
+            state.isLoading -> LoadingState(Modifier.padding(innerPadding))
+            state.recipe != null -> RecipeDetailContent(
+                recipe = state.recipe,
                 contentPadding = innerPadding,
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
             )
             else -> ErrorState(
-                message = uiState.errorMessage ?: "Recipe not found.",
-                onRetry = onRetry,
+                message = state.errorMessage
+                    ?: stringResource(R.string.detail_not_found),
+                onRetry = { onIntent(RecipeDetailIntent.Retry) },
                 modifier = Modifier.padding(innerPadding),
             )
         }
@@ -144,8 +156,8 @@ private fun RecipeDetailContent(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(top = contentPadding.calculateTopPadding())
-            .padding(horizontal = 16.dp)
-            .padding(bottom = 24.dp),
+            .padding(horizontal = Spacing.lg)
+            .padding(bottom = Spacing.xxl),
     ) {
         RecipeImage(
             imageUrl = recipe.imageUrl,
@@ -154,7 +166,7 @@ private fun RecipeDetailContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(16f / 10f)
-                .clip(RoundedCornerShape(16.dp))
+                .clip(RoundedCornerShape(Spacing.imageRadius))
                 .sharedElementModifier(
                     sharedScope = sharedScope,
                     animatedScope = animatedScope,
@@ -162,7 +174,7 @@ private fun RecipeDetailContent(
                 ),
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(Spacing.lg))
 
         Text(
             text = recipe.title,
@@ -180,49 +192,55 @@ private fun RecipeDetailContent(
             text = recipe.description,
             style = MaterialTheme.typography.bodyMedium,
             color = TextSecondary,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = Spacing.sm),
         )
 
         DietaryChips(
             dietary = recipe.dietary,
-            modifier = Modifier.padding(top = 12.dp),
+            modifier = Modifier.padding(top = Spacing.md),
         )
 
-        Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(Spacing.xl))
 
         DetailTabRow(
             selected = selectedTab,
             onSelect = { selectedTab = it },
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(Spacing.lg))
 
         MetaRow(
             servings = recipe.servings,
             trailingLabel = when (selectedTab) {
-                DetailTab.Ingredients -> "${recipe.ingredients.size} Items"
-                DetailTab.Procedure -> "${recipe.instructions.size} Steps"
+                DetailTab.Ingredients -> stringResource(
+                    R.string.detail_items_count,
+                    recipe.ingredients.size,
+                )
+                DetailTab.Procedure -> stringResource(
+                    R.string.detail_steps_count,
+                    recipe.instructions.size,
+                )
             },
         )
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(Spacing.md))
 
         when (selectedTab) {
             DetailTab.Ingredients -> {
                 recipe.ingredients.forEachIndexed { index, ingredient ->
                     ContentCard(
-                        title = "Ingredient ${index + 1}",
+                        title = stringResource(R.string.detail_ingredient_n, index + 1),
                         body = ingredient,
-                        modifier = Modifier.padding(bottom = 12.dp),
+                        modifier = Modifier.padding(bottom = Spacing.md),
                     )
                 }
             }
             DetailTab.Procedure -> {
                 recipe.instructions.forEachIndexed { index, step ->
                     ContentCard(
-                        title = "Step ${index + 1}",
+                        title = stringResource(R.string.detail_step_n, index + 1),
                         body = step,
-                        modifier = Modifier.padding(bottom = 12.dp),
+                        modifier = Modifier.padding(bottom = Spacing.md),
                     )
                 }
             }
@@ -231,22 +249,19 @@ private fun RecipeDetailContent(
 }
 
 @Composable
-private fun DetailTabRow(
-    selected: DetailTab,
-    onSelect: (DetailTab) -> Unit,
-) {
+private fun DetailTabRow(selected: DetailTab, onSelect: (DetailTab) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.md),
     ) {
         DetailTabButton(
-            label = "Ingredient",
+            label = stringResource(R.string.detail_tab_ingredient),
             selected = selected == DetailTab.Ingredients,
             onClick = { onSelect(DetailTab.Ingredients) },
             modifier = Modifier.weight(1f),
         )
         DetailTabButton(
-            label = "Procedure",
+            label = stringResource(R.string.detail_tab_procedure),
             selected = selected == DetailTab.Procedure,
             onClick = { onSelect(DetailTab.Procedure) },
             modifier = Modifier.weight(1f),
@@ -255,16 +270,11 @@ private fun DetailTabRow(
 }
 
 @Composable
-private fun DetailTabButton(
-    label: String,
-    selected: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val shape = RoundedCornerShape(12.dp)
+private fun DetailTabButton(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val shape = RoundedCornerShape(Spacing.chipRadius)
     Box(
         modifier = modifier
-            .height(44.dp)
+            .height(Spacing.buttonHeight)
             .clip(shape)
             .background(if (selected) BrandGreen else MaterialTheme.colorScheme.surface)
             .clickable(onClick = onClick),
@@ -281,10 +291,7 @@ private fun DetailTabButton(
 }
 
 @Composable
-private fun MetaRow(
-    servings: Int,
-    trailingLabel: String,
-) {
+private fun MetaRow(servings: Int, trailingLabel: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -297,7 +304,7 @@ private fun MetaRow(
                 tint = TextSecondary,
             )
             Text(
-                text = "  $servings serve${if (servings == 1) "" else "s"}",
+                text = "  " + pluralStringResource(R.plurals.servings_label, servings, servings),
                 style = MaterialTheme.typography.bodySmall,
                 color = TextSecondary,
             )
@@ -315,9 +322,8 @@ private fun MetaRow(
 private fun RecipeDetailScreenPreview() {
     RecipeBoxTheme {
         RecipeDetailScreen(
-            uiState = RecipeDetailUiState(isLoading = false, recipe = SampleRecipes.margherita),
-            onBack = {},
-            onRetry = {},
+            state = RecipeDetailUiState(isLoading = false, recipe = SampleRecipes.margherita),
+            onIntent = {},
         )
     }
 }

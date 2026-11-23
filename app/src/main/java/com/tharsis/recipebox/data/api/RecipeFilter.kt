@@ -38,8 +38,7 @@ object RecipeFilter {
         return haystack.contains(text)
     }
 
-    private fun Recipe.matchesVegetarian(vegetarianOnly: Boolean): Boolean =
-        !vegetarianOnly || dietary.vegetarian
+    private fun Recipe.matchesVegetarian(vegetarianOnly: Boolean): Boolean = !vegetarianOnly || dietary.vegetarian
 
     private fun Recipe.matchesServings(min: Int?, max: Int?): Boolean =
         (min == null || servings >= min) && (max == null || servings <= max)

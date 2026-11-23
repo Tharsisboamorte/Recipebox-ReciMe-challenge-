@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.ui.detail.RecipeDetailRoute
 import com.tharsis.recipebox.ui.list.RecipeListRoute
 
@@ -23,20 +24,16 @@ object Routes {
     fun detail(recipeId: String) = "recipe/$recipeId"
 }
 
-private const val TRANSITION_MS = 320
-
 /**
  * Hosts navigation inside [SharedTransitionLayout] so the tapped recipe image
  * morphs into the detail hero. Container transitions stay as fades (no swipe
  * slide) so the shared-element motion remains the primary cue.
- *
- * Image decode sizes stay capped (see [com.tharsis.recipebox.ui.components.RecipeImageSize])
- * to keep scroll memory under control while shared elements are active.
  */
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun RecipeNavHost(modifier: Modifier = Modifier) {
     val navController = rememberNavController()
+    val transitionMs = AppConfig.Motion.NAV_TRANSITION_MS
 
     SharedTransitionLayout(modifier = modifier) {
         NavHost(
@@ -45,9 +42,9 @@ fun RecipeNavHost(modifier: Modifier = Modifier) {
         ) {
             composable(
                 route = Routes.LIST,
-                enterTransition = { fadeIn(tween(TRANSITION_MS)) },
-                exitTransition = { fadeOut(tween(TRANSITION_MS)) },
-                popEnterTransition = { fadeIn(tween(TRANSITION_MS)) },
+                enterTransition = { fadeIn(tween(transitionMs)) },
+                exitTransition = { fadeOut(tween(transitionMs)) },
+                popEnterTransition = { fadeIn(tween(transitionMs)) },
             ) {
                 RecipeListRoute(
                     onRecipeClick = { id -> navController.navigate(Routes.detail(id)) },
@@ -61,9 +58,9 @@ fun RecipeNavHost(modifier: Modifier = Modifier) {
                 arguments = listOf(
                     navArgument(Routes.ARG_RECIPE_ID) { type = NavType.StringType },
                 ),
-                enterTransition = { fadeIn(tween(TRANSITION_MS)) },
-                exitTransition = { fadeOut(tween(TRANSITION_MS)) },
-                popExitTransition = { fadeOut(tween(TRANSITION_MS)) },
+                enterTransition = { fadeIn(tween(transitionMs)) },
+                exitTransition = { fadeOut(tween(transitionMs)) },
+                popExitTransition = { fadeOut(tween(transitionMs)) },
             ) { backStackEntry ->
                 val recipeId = backStackEntry.arguments?.getString(Routes.ARG_RECIPE_ID).orEmpty()
                 RecipeDetailRoute(

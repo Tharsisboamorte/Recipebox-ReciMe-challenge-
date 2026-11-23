@@ -38,11 +38,12 @@ import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.OverlayScrim
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 import com.tharsis.recipebox.ui.theme.TextOnGreen
 import com.tharsis.recipebox.ui.theme.TextSecondary
 
-private val GridShape = RoundedCornerShape(16.dp)
-private val ListShape = RoundedCornerShape(16.dp)
+private val GridShape = RoundedCornerShape(Spacing.imageRadius)
+private val ListShape = RoundedCornerShape(Spacing.imageRadius)
 
 @Composable
 fun RecipeCard(
@@ -53,7 +54,6 @@ fun RecipeCard(
     sharedScope: SharedTransitionScope? = null,
     animatedScope: AnimatedVisibilityScope? = null,
 ) {
-
     when (layoutMode) {
         RecipeLayoutMode.Grid -> RecipeGridCard(
             recipe = recipe,

@@ -5,6 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ErrorOutline
+import androidx.compose.material.icons.outlined.SearchOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -14,13 +17,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.ErrorOutline
-import androidx.compose.material.icons.outlined.SearchOff
+import com.tharsis.recipebox.R
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 
 /** Centered progress indicator for the initial load. */
 @Composable
@@ -47,33 +49,33 @@ fun MessageState(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(32.dp),
+            .padding(Spacing.xxxl),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(56.dp),
+            modifier = Modifier.size(Spacing.emptyIcon),
             tint = MaterialTheme.colorScheme.primary,
         )
         Text(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = Spacing.lg),
         )
         Text(
             text = message,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = Spacing.sm),
         )
         if (actionLabel != null && onAction != null) {
             Button(
                 onClick = onAction,
-                modifier = Modifier.padding(top = 20.dp),
+                modifier = Modifier.padding(top = Spacing.xl),
             ) {
                 Text(actionLabel)
             }
@@ -85,9 +87,9 @@ fun MessageState(
 fun EmptyResultState(onClearFilters: () -> Unit, modifier: Modifier = Modifier) {
     MessageState(
         icon = Icons.Outlined.SearchOff,
-        title = "No recipes found",
-        message = "Try adjusting your search or clearing some filters.",
-        actionLabel = "Clear filters",
+        title = stringResource(R.string.empty_title),
+        message = stringResource(R.string.empty_message),
+        actionLabel = stringResource(R.string.empty_clear_filters),
         onAction = onClearFilters,
         modifier = modifier,
     )
@@ -97,9 +99,9 @@ fun EmptyResultState(onClearFilters: () -> Unit, modifier: Modifier = Modifier) 
 fun ErrorState(message: String, onRetry: () -> Unit, modifier: Modifier = Modifier) {
     MessageState(
         icon = Icons.Outlined.ErrorOutline,
-        title = "Couldn't load recipes",
+        title = stringResource(R.string.error_title),
         message = message,
-        actionLabel = "Retry",
+        actionLabel = stringResource(R.string.error_retry),
         onAction = onRetry,
         modifier = modifier,
     )

@@ -30,15 +30,19 @@ class RecipeRepositoryImplTest {
     )
 
     @Test
-    fun `getRecipes saves successful api response to disk cache`() = runTest {
+    fun `getRecipes saves successful api response to disk cache once`() = runTest {
         val api = FakeApi(recipes = listOf(sample))
         val cache = FakeCache()
         val repo = RecipeRepositoryImpl(api = api, diskCache = cache)
 
-        val result = repo.getRecipes()
-
-        assertEquals(listOf(sample), result)
+        assertEquals(listOf(sample), repo.getRecipes())
         assertEquals(listOf(sample), cache.saved)
+
+        cache.saved = emptyList()
+        repo.getRecipes()
+        repo.searchRecipes(RecipeSearchQuery(text = "soup"))
+
+        assertTrue("disk must not be rewritten on every search", cache.saved.isEmpty())
     }
 
     @Test
@@ -50,7 +54,7 @@ class RecipeRepositoryImplTest {
         val result = repo.getRecipes()
 
         assertEquals(listOf(sample), result)
-        assertTrue(cache.saved.isEmpty())
+        assertTrue(cache.saveCount == 0)
     }
 
     @Test
@@ -65,10 +69,8 @@ class RecipeRepositoryImplTest {
         assertEquals("Cached Soup", result.first().title)
     }
 
-    private class FakeApi(
-        private val recipes: List<Recipe> = emptyList(),
-        private val fail: Boolean = false,
-    ) : RecipeApi {
+    private class FakeApi(private val recipes: List<Recipe> = emptyList(), private val fail: Boolean = false) :
+        RecipeApi {
         override suspend fun getRecipes(): List<Recipe> {
             if (fail) error("offline")
             return recipes
@@ -85,13 +87,13 @@ class RecipeRepositoryImplTest {
         }
     }
 
-    private class FakeCache(
-        private var stored: List<Recipe>? = null,
-    ) : RecipeCache {
+    private class FakeCache(private var stored: List<Recipe>? = null) : RecipeCache {
         var saved: List<Recipe> = emptyList()
+        var saveCount: Int = 0
             private set
 
         override suspend fun save(recipes: List<Recipe>) {
+            saveCount++
             saved = recipes
             stored = recipes
         }

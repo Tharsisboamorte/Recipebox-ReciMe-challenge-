@@ -3,53 +3,35 @@ package com.tharsis.recipebox.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.AssistChipDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
+import com.tharsis.recipebox.R
 import com.tharsis.recipebox.data.model.DietaryAttributes
 import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.BrandGreenContainer
-import com.tharsis.recipebox.ui.theme.BrandGreenDark
-
-
-//TODO: REMOVE NOT USED COMPONENT
-/** Small pill showing the number of servings. */
-@Composable
-fun ServingsBadge(servings: Int, modifier: Modifier = Modifier) {
-    AssistChip(
-        onClick = {},
-        enabled = false,
-        label = { Text(text = "$servings servings") },
-        shape = RoundedCornerShape(50),
-        colors = AssistChipDefaults.assistChipColors(
-            disabledContainerColor = BrandGreenContainer,
-            disabledLabelColor = BrandGreenDark,
-        ),
-        modifier = modifier,
-    )
-}
+import com.tharsis.recipebox.ui.theme.Spacing
 
 /** Row of chips describing the dietary attributes a recipe satisfies. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DietaryChips(
-    dietary: DietaryAttributes,
-    modifier: Modifier = Modifier,
-) {
-    val labels = dietary.activeLabels
+fun DietaryChips(dietary: DietaryAttributes, modifier: Modifier = Modifier) {
+    val labels = buildList {
+        if (dietary.vegetarian) add(stringResource(R.string.dietary_vegetarian))
+        if (dietary.vegan) add(stringResource(R.string.dietary_vegan))
+        if (dietary.glutenFree) add(stringResource(R.string.dietary_gluten_free))
+        if (dietary.dairyFree) add(stringResource(R.string.dietary_dairy_free))
+    }
     if (labels.isEmpty()) return
+
     FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.sm),
+        verticalArrangement = Arrangement.spacedBy(Spacing.xxs),
     ) {
         labels.forEach { label ->
             SuggestionChip(
@@ -63,20 +45,5 @@ fun DietaryChips(
                 ),
             )
         }
-    }
-}
-
-//Todo: remove not used
-/** Compact single-line dietary summary for dense card layouts. */
-@Composable
-fun DietarySummaryRow(dietary: DietaryAttributes, modifier: Modifier = Modifier) {
-    val labels = dietary.activeLabels
-    if (labels.isEmpty()) return
-    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-        Text(
-            text = labels.joinToString(" • "),
-            style = MaterialTheme.typography.labelSmall,
-            color = BrandGreen,
-        )
     }
 }

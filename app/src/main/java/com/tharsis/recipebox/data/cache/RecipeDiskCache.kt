@@ -1,16 +1,17 @@
 package com.tharsis.recipebox.data.cache
 
 import android.content.Context
+import com.tharsis.recipebox.core.config.AppConfig
 import com.tharsis.recipebox.data.api.dto.DietaryDto
 import com.tharsis.recipebox.data.api.dto.RecipeDto
 import com.tharsis.recipebox.data.api.dto.RecipeResponseDto
 import com.tharsis.recipebox.data.api.dto.toDomain
 import com.tharsis.recipebox.data.model.Recipe
+import java.io.File
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
-import java.io.File
 
 /**
  * Persists the last successfully fetched recipe list to app-private storage.
@@ -41,7 +42,7 @@ class RecipeDiskCache(
     }
 
     companion object {
-        const val CACHE_FILE_NAME = "recipes_cache.json"
+        const val CACHE_FILE_NAME = AppConfig.Data.RECIPE_DISK_CACHE_FILE
     }
 }
 

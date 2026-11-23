@@ -1,21 +1,26 @@
-# Add project specific ProGuard rules here.
-# You can control the set of applied configuration files using the
-# proguardFiles setting in build.gradle.
-#
-# For more details, see
-#   http://developer.android.com/guide/developing/tools/proguard.html
+# RecipeBox release R8 rules.
+# Prefer annotation-scoped and package-scoped keeps over library-wide -keep.
 
-# If your project uses WebView with JS, uncomment the following
-# and specify the fully qualified class name to the JavaScript interface
-# class:
-#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
-#   public *;
-#}
+# Crash reports: keep line numbers, hide original file names.
+-keepattributes SourceFile,LineNumberTable,*Annotation*,Signature,InnerClasses,EnclosingMethod
+-renamesourcefileattribute SourceFile
 
-# Uncomment this to preserve the line number information for
-# debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+# kotlinx.serialization only our @Serializable models + generated serializers.
+-keepattributes RuntimeVisibleAnnotations,AnnotationDefault
+-keep,includedescriptorclasses class com.tharsis.recipebox.**$$serializer { *; }
+-keepclassmembers class com.tharsis.recipebox.** {
+    *** Companion;
+}
+-keepclasseswithmembers class com.tharsis.recipebox.** {
+    kotlinx.serialization.KSerializer serializer(...);
+}
+-keep @kotlinx.serialization.Serializable class com.tharsis.recipebox.** { *; }
 
-# If you keep the line number information, uncomment this to
-# hide the original source file name.
-#-renamesourcefileattribute SourceFile
+# Coil / OkHttp ship their own consumer rules; only silence optional platform stubs.
+-dontwarn coil3.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn org.codehaus.mojo.animal_sniffer.**
+
+# Koin module graph (referenced from Application).
+-keep class com.tharsis.recipebox.di.** { *; }

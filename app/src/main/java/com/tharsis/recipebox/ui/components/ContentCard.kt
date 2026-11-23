@@ -16,31 +16,32 @@ import androidx.compose.ui.unit.dp
 import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.CardSurface
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
+import com.tharsis.recipebox.ui.theme.Spacing
 import com.tharsis.recipebox.ui.theme.TextPrimary
 import com.tharsis.recipebox.ui.theme.TextSecondary
-
-private val CardShape = RoundedCornerShape(14.dp)
 
 /**
  * Shared step/ingredient card: soft gray fill + thin green border so the list
  * feels on-brand without looking as flat as a plain gray block.
  */
 @Composable
-fun ContentCard(
-    title: String,
-    body: String,
-    modifier: Modifier = Modifier,
-) {
+fun ContentCard(title: String, body: String, modifier: Modifier = Modifier) {
+    val shape = RoundedCornerShape(Spacing.cardRadius)
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .border(width = 1.5.dp, color = BrandGreen, shape = CardShape),
-        shape = CardShape,
+            .border(width = 1.5.dp, color = BrandGreen, shape = shape),
+        shape = shape,
         color = CardSurface,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp,
     ) {
-        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
+        Column(
+            modifier = Modifier.padding(
+                horizontal = Spacing.lg,
+                vertical = Spacing.md + Spacing.xxs,
+            ),
+        ) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleSmall,
@@ -51,7 +52,7 @@ fun ContentCard(
                 text = body,
                 style = MaterialTheme.typography.bodyMedium,
                 color = TextSecondary,
-                modifier = Modifier.padding(top = 6.dp),
+                modifier = Modifier.padding(top = Spacing.xs),
             )
         }
     }
@@ -64,7 +65,7 @@ private fun ContentCardPreview() {
         ContentCard(
             title = "Step 1",
             body = "Lorem ipsum dolor sit amet consectetur. Elit pretium cras mattis.",
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(Spacing.lg),
         )
     }
 }
