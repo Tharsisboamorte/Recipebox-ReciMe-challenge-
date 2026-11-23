@@ -78,7 +78,7 @@ flowchart LR
 | `di` | Koin `appModule`. |
 | `ui/*` | Per-feature screens (list/detail), theme, components, navigation. |
 
-No use-case layer — intentional for a small catalog (same stance as Now in Android).
+No use-case layer intentional for a small catalog (same stance as Now in Android).
 
 ### Why this shape
 

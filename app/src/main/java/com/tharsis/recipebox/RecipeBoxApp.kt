@@ -3,12 +3,10 @@ package com.tharsis.recipebox
 import android.app.Application
 import coil3.ImageLoader
 import coil3.SingletonImageLoader
-import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.di.appModule
-import okio.Path.Companion.toOkioPath
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -28,16 +26,8 @@ class RecipeBoxApp : Application() {
                         .maxSizePercent(context, AppConfig.Image.MEMORY_CACHE_PERCENT)
                         .build()
                 }
-                .diskCache {
-                    DiskCache.Builder()
-                        .directory(
-                            context.cacheDir
-                                .resolve(AppConfig.Image.DISK_CACHE_DIR)
-                                .toOkioPath(),
-                        )
-                        .maxSizeBytes(AppConfig.Image.DISK_CACHE_MAX_BYTES)
-                        .build()
-                }
+                // Assets are local; no remote image traffic to persist.
+                .diskCache(null)
                 .crossfade(AppConfig.Image.CROSSFADE_MS)
                 .build()
         }

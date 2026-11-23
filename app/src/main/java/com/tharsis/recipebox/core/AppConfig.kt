@@ -18,8 +18,6 @@ object AppConfig {
 
     object Image {
         const val MEMORY_CACHE_PERCENT = 0.15
-        const val DISK_CACHE_DIR = "recipe_image_cache"
-        const val DISK_CACHE_MAX_BYTES = 64L * 1024L * 1024L
         const val CROSSFADE_MS = 180
         const val REQUEST_CROSSFADE_MS = 120
         const val THUMBNAIL_WIDTH_PX = 360

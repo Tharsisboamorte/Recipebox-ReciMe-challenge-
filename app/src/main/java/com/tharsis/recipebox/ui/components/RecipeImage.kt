@@ -33,8 +33,8 @@ enum class RecipeImageSize(val widthPx: Int, val heightPx: Int) {
 }
 
 /**
- * Recipe image loaded via Coil (bundled asset or remote URL) with a hard-capped
- * decode size. Asset paths work offline; remote URLs also hit Coil's disk cache.
+ * Recipe image loaded via Coil (bundled asset, with optional remote URL fallback)
+ * with a hard-capped decode size. Missing or failed loads show the same placeholder.
  */
 @Composable
 fun RecipeImage(
@@ -57,7 +57,6 @@ fun RecipeImage(
                 .size(Size(widthPx, heightPx))
                 .precision(Precision.INEXACT)
                 .memoryCacheKey(cacheKey)
-                .diskCacheKey(cacheKey)
                 .crossfade(AppConfig.Image.REQUEST_CROSSFADE_MS)
                 .build()
         }
@@ -67,14 +66,14 @@ fun RecipeImage(
         modifier = modifier.background(MaterialTheme.colorScheme.surfaceVariant),
         contentAlignment = Alignment.Center,
     ) {
-        if (request == null) {
-            Icon(
-                imageVector = Icons.Outlined.RestaurantMenu,
-                contentDescription = contentDescription,
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.size(Spacing.xl * 2),
-            )
-        } else {
+        // Always drawn underneath; visible when there is no request or Coil fails to draw.
+        Icon(
+            imageVector = Icons.Outlined.RestaurantMenu,
+            contentDescription = if (request == null) contentDescription else null,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            modifier = Modifier.size(Spacing.xl * 2),
+        )
+        if (request != null) {
             AsyncImage(
                 model = request,
                 contentDescription = contentDescription,
