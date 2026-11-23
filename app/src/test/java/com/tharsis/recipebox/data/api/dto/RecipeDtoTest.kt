@@ -1,5 +1,7 @@
 package com.tharsis.recipebox.data.api.dto
 
+import com.tharsis.recipebox.data.mapper.resolveImageSource
+import com.tharsis.recipebox.data.mapper.toDomain
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

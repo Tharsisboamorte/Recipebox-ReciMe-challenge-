@@ -2,9 +2,9 @@ package com.tharsis.recipebox.ui.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tharsis.recipebox.core.config.AppConfig
-import com.tharsis.recipebox.data.model.Recipe
-import com.tharsis.recipebox.data.repository.RecipeRepository
+import com.tharsis.recipebox.core.AppConfig
+import com.tharsis.recipebox.domain.model.Recipe
+import com.tharsis.recipebox.domain.repository.RecipeRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.Channel

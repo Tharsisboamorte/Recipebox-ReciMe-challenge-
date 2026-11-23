@@ -1,14 +1,11 @@
-package com.tharsis.recipebox.data.api
+package com.tharsis.recipebox.domain.model
 
-import com.tharsis.recipebox.data.model.DietaryAttributes
-import com.tharsis.recipebox.data.model.Recipe
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Unit tests for the pure search/filter semantics. These exercise the same
- * logic the (mock) search endpoint uses, with no Android dependencies.
+ * Unit tests for pure search/filter semantics — no Android dependencies.
  */
 class RecipeFilterTest {
 
@@ -18,28 +15,28 @@ class RecipeFilterTest {
         description = "Cheesy tomato pizza",
         servings = 2,
         ingredients = listOf("Pizza dough", "Tomatoes", "Mozzarella"),
-        instructions = listOf("Bake until golden"),
+        instructions = listOf("Stretch dough", "Bake until blistered"),
         dietary = DietaryAttributes(vegetarian = true),
     )
 
     private val curry = recipe(
         id = "2",
-        title = "Chicken Curry",
-        description = "Spicy coconut curry",
+        title = "Thai Green Curry",
+        description = "Spicy coconut curry with chicken",
         servings = 4,
-        ingredients = listOf("Chicken", "Coconut milk", "Garlic"),
-        instructions = listOf("Simmer the chicken", "Serve with rice"),
-        dietary = DietaryAttributes(vegetarian = false),
+        ingredients = listOf("Chicken", "Coconut milk", "Green curry paste"),
+        instructions = listOf("Fry paste", "Simmer with coconut milk"),
+        dietary = DietaryAttributes(),
     )
 
     private val salad = recipe(
         id = "3",
-        title = "Garden Salad",
-        description = "Fresh greens",
+        title = "Greek Salad",
+        description = "Fresh cucumber tomato salad",
         servings = 6,
-        ingredients = listOf("Lettuce", "Tomatoes", "Cucumber"),
-        instructions = listOf("Toss and serve"),
-        dietary = DietaryAttributes(vegetarian = true, vegan = true),
+        ingredients = listOf("Cucumber", "Tomatoes", "Feta", "Olives"),
+        instructions = listOf("Chop vegetables", "Toss with oil"),
+        dietary = DietaryAttributes(vegetarian = true, glutenFree = true),
     )
 
     private val all = listOf(pizza, curry, salad)

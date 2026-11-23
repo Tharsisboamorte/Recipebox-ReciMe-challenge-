@@ -45,8 +45,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.tharsis.recipebox.R
-import com.tharsis.recipebox.data.model.Recipe
-import com.tharsis.recipebox.ui.components.ContentCard
+import com.tharsis.recipebox.domain.model.Recipe
+import com.tharsis.recipebox.ui.components.AppCard
 import com.tharsis.recipebox.ui.components.DietaryChips
 import com.tharsis.recipebox.ui.components.ErrorState
 import com.tharsis.recipebox.ui.components.LoadingState
@@ -55,12 +55,8 @@ import com.tharsis.recipebox.ui.components.RecipeImageSize
 import com.tharsis.recipebox.ui.components.RecipeSharedKeys
 import com.tharsis.recipebox.ui.components.sharedElementModifier
 import com.tharsis.recipebox.ui.preview.SampleRecipes
-import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextOnGreen
-import com.tharsis.recipebox.ui.theme.TextPrimary
-import com.tharsis.recipebox.ui.theme.TextSecondary
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -114,12 +110,14 @@ fun RecipeDetailScreen(
                         Icon(
                             Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.cd_back),
-                            tint = TextPrimary,
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
             )
         },
@@ -180,7 +178,7 @@ private fun RecipeDetailContent(
             text = recipe.title,
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.sharedElementModifier(
                 sharedScope = sharedScope,
                 animatedScope = animatedScope,
@@ -191,7 +189,7 @@ private fun RecipeDetailContent(
         Text(
             text = recipe.description,
             style = MaterialTheme.typography.bodyMedium,
-            color = TextSecondary,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = Spacing.sm),
         )
 
@@ -228,7 +226,7 @@ private fun RecipeDetailContent(
         when (selectedTab) {
             DetailTab.Ingredients -> {
                 recipe.ingredients.forEachIndexed { index, ingredient ->
-                    ContentCard(
+                    AppCard(
                         title = stringResource(R.string.detail_ingredient_n, index + 1),
                         body = ingredient,
                         modifier = Modifier.padding(bottom = Spacing.md),
@@ -237,7 +235,7 @@ private fun RecipeDetailContent(
             }
             DetailTab.Procedure -> {
                 recipe.instructions.forEachIndexed { index, step ->
-                    ContentCard(
+                    AppCard(
                         title = stringResource(R.string.detail_step_n, index + 1),
                         body = step,
                         modifier = Modifier.padding(bottom = Spacing.md),
@@ -271,12 +269,13 @@ private fun DetailTabRow(selected: DetailTab, onSelect: (DetailTab) -> Unit) {
 
 @Composable
 private fun DetailTabButton(label: String, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val colors = MaterialTheme.colorScheme
     val shape = RoundedCornerShape(Spacing.chipRadius)
     Box(
         modifier = modifier
             .height(Spacing.buttonHeight)
             .clip(shape)
-            .background(if (selected) BrandGreen else MaterialTheme.colorScheme.surface)
+            .background(if (selected) colors.primary else colors.surfaceVariant)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
@@ -284,7 +283,7 @@ private fun DetailTabButton(label: String, selected: Boolean, onClick: () -> Uni
             text = label,
             style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold,
-            color = if (selected) TextOnGreen else BrandGreen,
+            color = if (selected) colors.onPrimary else colors.primary,
             textAlign = TextAlign.Center,
         )
     }
@@ -292,6 +291,7 @@ private fun DetailTabButton(label: String, selected: Boolean, onClick: () -> Uni
 
 @Composable
 private fun MetaRow(servings: Int, trailingLabel: String) {
+    val muted = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -301,18 +301,18 @@ private fun MetaRow(servings: Int, trailingLabel: String) {
             Icon(
                 imageVector = Icons.Outlined.Restaurant,
                 contentDescription = null,
-                tint = TextSecondary,
+                tint = muted,
             )
             Text(
                 text = "  " + pluralStringResource(R.plurals.servings_label, servings, servings),
                 style = MaterialTheme.typography.bodySmall,
-                color = TextSecondary,
+                color = muted,
             )
         }
         Text(
             text = trailingLabel,
             style = MaterialTheme.typography.bodySmall,
-            color = TextSecondary,
+            color = muted,
         )
     }
 }

@@ -30,26 +30,32 @@ private val LightColorScheme = lightColorScheme(
 
 private val DarkColorScheme = darkColorScheme(
     primary = BrandGreenSoft,
-    onPrimary = TextPrimary,
+    onPrimary = Color(0xFF06261D),
     primaryContainer = BrandGreenDark,
-    onPrimaryContainer = TextOnGreen,
+    onPrimaryContainer = Color(0xFFE8F5F1),
     secondary = BrandGreen,
     onSecondary = TextOnGreen,
+    secondaryContainer = Color(0xFF1E3A32),
+    onSecondaryContainer = BrandGreenSoft,
+    tertiary = BrandGreenSoft,
+    onTertiary = Color(0xFF06261D),
     background = Color(0xFF101412),
-    onBackground = TextOnGreen,
+    onBackground = Color(0xFFF2F4F3),
     surface = Color(0xFF161B19),
-    onSurface = TextOnGreen,
+    onSurface = Color(0xFFF2F4F3),
     surfaceVariant = Color(0xFF24302C),
-    onSurfaceVariant = BrandGreenSoft,
+    onSurfaceVariant = Color(0xFFB8C5C0),
     outline = BrandGreenSoft,
+    outlineVariant = Color(0xFF2F3D38),
 )
 
 @Composable
-fun RecipeBoxTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
-    val colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme
-
+fun RecipeBoxTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
     MaterialTheme(
-        colorScheme = colorScheme,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         content = content,
     )

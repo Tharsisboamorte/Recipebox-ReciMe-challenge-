@@ -1,6 +1,6 @@
-package com.tharsis.recipebox.data.cache
+package com.tharsis.recipebox.data.local
 
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.domain.model.Recipe
 
 /** Offline snapshot of the recipe catalog. */
 interface RecipeCache {

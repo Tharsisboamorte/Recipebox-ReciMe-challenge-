@@ -1,11 +1,11 @@
 package com.tharsis.recipebox.data.repository
 
 import com.tharsis.recipebox.data.api.RecipeApi
-import com.tharsis.recipebox.data.api.RecipeFilter
-import com.tharsis.recipebox.data.api.RecipeSearchQuery
-import com.tharsis.recipebox.data.cache.RecipeCache
-import com.tharsis.recipebox.data.model.DietaryAttributes
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.domain.model.RecipeFilter
+import com.tharsis.recipebox.domain.model.RecipeSearchQuery
+import com.tharsis.recipebox.data.local.RecipeCache
+import com.tharsis.recipebox.domain.model.DietaryAttributes
+import com.tharsis.recipebox.domain.model.Recipe
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

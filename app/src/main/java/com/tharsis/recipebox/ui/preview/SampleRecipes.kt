@@ -1,7 +1,7 @@
 package com.tharsis.recipebox.ui.preview
 
-import com.tharsis.recipebox.data.model.DietaryAttributes
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.domain.model.DietaryAttributes
+import com.tharsis.recipebox.domain.model.Recipe
 
 /**
  * Static sample data used exclusively by `@Preview` composables so previews

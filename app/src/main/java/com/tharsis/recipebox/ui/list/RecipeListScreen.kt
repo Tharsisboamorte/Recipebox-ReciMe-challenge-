@@ -34,20 +34,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.tharsis.recipebox.R
-import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.ui.components.EmptyResultState
 import com.tharsis.recipebox.ui.components.ErrorState
 import com.tharsis.recipebox.ui.components.LoadingState
 import com.tharsis.recipebox.ui.preview.SampleRecipes
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextPrimary
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -90,7 +88,7 @@ fun RecipeListScreen(
     sharedScope: SharedTransitionScope? = null,
     animatedScope: AnimatedVisibilityScope? = null,
 ) {
-    var showFilters by remember { mutableStateOf(false) }
+    val (showFilters, setShowFilters) = remember { mutableStateOf(false) }
 
     Scaffold(
         modifier = modifier.fillMaxSize(),
@@ -101,11 +99,13 @@ fun RecipeListScreen(
                     Text(
                         text = stringResource(R.string.list_title),
                         fontWeight = FontWeight.Bold,
-                        color = TextPrimary,
                     )
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onBackground,
+                    actionIconContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
             )
         },
@@ -117,7 +117,7 @@ fun RecipeListScreen(
                 layoutMode = state.layoutMode,
                 onSearchTextChange = { onIntent(RecipeListIntent.SearchChanged(it)) },
                 onClearText = { onIntent(RecipeListIntent.ClearSearch) },
-                onFilterClick = { showFilters = true },
+                onFilterClick = { setShowFilters(true) },
                 onToggleLayout = { onIntent(RecipeListIntent.ToggleLayout) },
             )
 
@@ -145,7 +145,7 @@ fun RecipeListScreen(
             filters = state.filters,
             onFiltersChange = { onIntent(RecipeListIntent.FiltersChanged(it)) },
             onClearAll = { onIntent(RecipeListIntent.ClearFilters) },
-            onDismiss = { showFilters = false },
+            onDismiss = { setShowFilters(false) },
         )
     }
 }

@@ -1,9 +1,12 @@
 package com.tharsis.recipebox.data.api
 
-import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.data.api.dto.RecipeResponseDto
-import com.tharsis.recipebox.data.api.dto.toDomain
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.data.local.AssetReader
+import com.tharsis.recipebox.data.mapper.toDomain
+import com.tharsis.recipebox.domain.model.Recipe
+import com.tharsis.recipebox.domain.model.RecipeFilter
+import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.sync.Mutex
@@ -12,12 +15,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
 
 /**
- * [RecipeApi] implementation backed by a JSON file bundled in `assets/`.
- *
- * The file is parsed once on first access and cached in memory, simulating a
- * network call that is served from a local fixture. Parsing/IO run on the IO
- * dispatcher; filtering reuses the pure [RecipeFilter] so behavior is identical
- * to what a server-side search would produce.
+ * [RecipeApi] backed by bundled `assets/` JSON. Parsed once, held in memory.
+ * Filtering reuses domain [RecipeFilter] so semantics match a server search.
  */
 class LocalRecipeApi(
     private val assetReader: AssetReader,
@@ -36,7 +35,8 @@ class LocalRecipeApi(
     override suspend fun searchRecipes(query: RecipeSearchQuery): List<Recipe> =
         RecipeFilter.apply(loadRecipes(), query)
 
-    override suspend fun getRecipeById(id: String): Recipe? = loadRecipes().firstOrNull { it.id == id }
+    override suspend fun getRecipeById(id: String): Recipe? =
+        loadRecipes().firstOrNull { it.id == id }
 
     private suspend fun loadRecipes(): List<Recipe> {
         cache?.let { return it }
@@ -60,5 +60,4 @@ class LocalRecipeApi(
     }
 }
 
-/** Raised when bundled recipe data cannot be read or parsed. */
 class RecipeDataException(message: String, cause: Throwable? = null) : Exception(message, cause)

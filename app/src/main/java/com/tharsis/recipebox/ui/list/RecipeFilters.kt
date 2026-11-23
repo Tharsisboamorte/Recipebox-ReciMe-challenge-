@@ -1,6 +1,6 @@
 package com.tharsis.recipebox.ui.list
 
-import com.tharsis.recipebox.data.api.RecipeSearchQuery
+import com.tharsis.recipebox.domain.model.RecipeSearchQuery
 
 /**
  * UI-facing representation of the active filters. Mirrors [RecipeSearchQuery]
@@ -27,7 +27,7 @@ data class RecipeFilters(
     val hasAny: Boolean get() = activeCount > 0
 }
 
-/** Combines the search text with [RecipeFilters] into a data-layer query. */
+/** Combines the search text with [RecipeFilters] into a domain search query. */
 fun RecipeFilters.toQuery(text: String): RecipeSearchQuery = RecipeSearchQuery(
     text = text.takeIf { it.isNotBlank() },
     vegetarianOnly = vegetarianOnly,

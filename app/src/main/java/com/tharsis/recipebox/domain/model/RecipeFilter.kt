@@ -1,12 +1,8 @@
-package com.tharsis.recipebox.data.api
-
-import com.tharsis.recipebox.data.model.Recipe
+package com.tharsis.recipebox.domain.model
 
 /**
- * Pure, framework-free filtering logic for [RecipeSearchQuery].
- *
- * Extracted from [LocalRecipeApi] so the search semantics can be unit tested
- * without Android, coroutines or I/O. Matching is case-insensitive throughout.
+ * Pure Kotlin filtering for [RecipeSearchQuery].
+ * Framework-free so search semantics can be unit-tested without Android or I/O.
  */
 object RecipeFilter {
 
@@ -38,7 +34,8 @@ object RecipeFilter {
         return haystack.contains(text)
     }
 
-    private fun Recipe.matchesVegetarian(vegetarianOnly: Boolean): Boolean = !vegetarianOnly || dietary.vegetarian
+    private fun Recipe.matchesVegetarian(vegetarianOnly: Boolean): Boolean =
+        !vegetarianOnly || dietary.vegetarian
 
     private fun Recipe.matchesServings(min: Int?, max: Int?): Boolean =
         (min == null || servings >= min) && (max == null || servings <= max)

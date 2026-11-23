@@ -1,12 +1,8 @@
-package com.tharsis.recipebox.data.model
+package com.tharsis.recipebox.domain.model
 
 /**
- * Domain representation of a cooking recipe.
- *
- * This is intentionally decoupled from any transport/serialization concern
- * (see [com.tharsis.recipebox.data.api.dto.RecipeDto]) so that the rest of the
- * app depends only on a clean domain type regardless of where the data
- * originates (bundled JSON today, a real network API tomorrow).
+ * Pure domain recipe. No Android, serialization, or transport annotations —
+ * those live on [com.tharsis.recipebox.data.api.dto.RecipeDto].
  */
 data class Recipe(
     val id: String,
@@ -20,8 +16,7 @@ data class Recipe(
 )
 
 /**
- * Dietary flags a recipe may satisfy. Modeled explicitly rather than as a
- * free-form string list so filters stay type-safe and self-documenting.
+ * Dietary flags a recipe may satisfy. Explicit booleans keep filters type-safe.
  */
 data class DietaryAttributes(
     val vegetarian: Boolean = false,
@@ -29,7 +24,7 @@ data class DietaryAttributes(
     val glutenFree: Boolean = false,
     val dairyFree: Boolean = false,
 ) {
-    /** Human-readable labels for the attributes this recipe satisfies. */
+    /** Stable English keys used by compact card overlays (UI maps chips via strings). */
     val activeLabels: List<String>
         get() = buildList {
             if (vegetarian) add("Vegetarian")

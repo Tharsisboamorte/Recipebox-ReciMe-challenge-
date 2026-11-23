@@ -19,7 +19,7 @@ import coil3.request.ImageRequest
 import coil3.request.crossfade
 import coil3.size.Precision
 import coil3.size.Size
-import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.ui.theme.Spacing
 
 /**

@@ -29,18 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.domain.model.Recipe
 import com.tharsis.recipebox.ui.components.RecipeImage
 import com.tharsis.recipebox.ui.components.RecipeImageSize
 import com.tharsis.recipebox.ui.components.RecipeSharedKeys
 import com.tharsis.recipebox.ui.components.sharedElementModifier
 import com.tharsis.recipebox.ui.preview.SampleRecipes
-import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.OverlayScrim
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextOnGreen
-import com.tharsis.recipebox.ui.theme.TextSecondary
 
 private val GridShape = RoundedCornerShape(Spacing.imageRadius)
 private val ListShape = RoundedCornerShape(Spacing.imageRadius)
@@ -119,7 +116,7 @@ private fun RecipeGridCard(
                 text = recipe.title,
                 style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.Bold,
-                color = TextOnGreen,
+                color = Color.White,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.sharedElementModifier(
@@ -131,7 +128,7 @@ private fun RecipeGridCard(
             Text(
                 text = subtitleFor(recipe),
                 style = MaterialTheme.typography.labelSmall,
-                color = TextOnGreen.copy(alpha = 0.85f),
+                color = Color.White.copy(alpha = 0.85f),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.padding(top = 4.dp),
@@ -151,7 +148,7 @@ private fun RecipeListCard(
     Surface(
         onClick = onClick,
         shape = ListShape,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.surfaceVariant,
         shadowElevation = 1.dp,
         modifier = modifier.fillMaxWidth(),
     ) {
@@ -189,7 +186,7 @@ private fun RecipeListCard(
                 Text(
                     text = recipe.description,
                     style = MaterialTheme.typography.bodySmall,
-                    color = TextSecondary,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 4.dp),
@@ -197,7 +194,7 @@ private fun RecipeListCard(
                 Text(
                     text = subtitleFor(recipe),
                     style = MaterialTheme.typography.labelMedium,
-                    color = BrandGreen,
+                    color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Medium,
                     modifier = Modifier.padding(top = 8.dp),
                 )

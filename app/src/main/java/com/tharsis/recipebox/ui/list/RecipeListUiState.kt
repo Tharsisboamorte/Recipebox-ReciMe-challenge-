@@ -1,6 +1,6 @@
 package com.tharsis.recipebox.ui.list
 
-import com.tharsis.recipebox.data.model.Recipe
+import com.tharsis.recipebox.domain.model.Recipe
 
 /**
  * Immutable snapshot of everything the recipe list screen needs to render.
@@ -13,9 +13,6 @@ data class RecipeListUiState(
     val filters: RecipeFilters = RecipeFilters(),
     val layoutMode: RecipeLayoutMode = RecipeLayoutMode.Grid,
 ) {
-    //todo: solve not used problem
-    val hasQuery: Boolean get() = searchText.isNotBlank() || filters.hasAny
-
     /** True when a successful load returned no matches (as opposed to loading). */
     val isEmptyResult: Boolean
         get() = !isLoading && errorMessage == null && recipes.isEmpty()

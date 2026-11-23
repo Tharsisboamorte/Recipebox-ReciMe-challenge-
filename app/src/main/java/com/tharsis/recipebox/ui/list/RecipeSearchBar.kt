@@ -30,11 +30,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tharsis.recipebox.R
-import com.tharsis.recipebox.ui.theme.BrandGreen
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextOnGreen
-import com.tharsis.recipebox.ui.theme.TextSecondary
 
 @Composable
 fun RecipeSearchBar(
@@ -47,6 +44,7 @@ fun RecipeSearchBar(
     onToggleLayout: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val colors = MaterialTheme.colorScheme
     Row(
         modifier = modifier.padding(horizontal = Spacing.lg, vertical = Spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
@@ -59,10 +57,10 @@ fun RecipeSearchBar(
             singleLine = true,
             shape = RoundedCornerShape(Spacing.cardRadius),
             placeholder = {
-                Text(stringResource(R.string.search_hint), color = TextSecondary)
+                Text(stringResource(R.string.search_hint), color = colors.onSurfaceVariant)
             },
             leadingIcon = {
-                Icon(Icons.Filled.Search, contentDescription = null, tint = TextSecondary)
+                Icon(Icons.Filled.Search, contentDescription = null, tint = colors.onSurfaceVariant)
             },
             trailingIcon = {
                 if (searchText.isNotEmpty()) {
@@ -76,17 +74,19 @@ fun RecipeSearchBar(
             },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = BrandGreen,
-                unfocusedBorderColor = TextSecondary.copy(alpha = 0.35f),
-                cursorColor = BrandGreen,
+                focusedBorderColor = colors.primary,
+                unfocusedBorderColor = colors.onSurfaceVariant.copy(alpha = 0.35f),
+                cursorColor = colors.primary,
+                focusedTextColor = colors.onSurface,
+                unfocusedTextColor = colors.onSurface,
             ),
         )
 
         IconButton(
             onClick = onToggleLayout,
             colors = IconButtonDefaults.iconButtonColors(
-                containerColor = BrandGreen.copy(alpha = 0.12f),
-                contentColor = BrandGreen,
+                containerColor = colors.primary.copy(alpha = 0.12f),
+                contentColor = colors.primary,
             ),
             modifier = Modifier.size(Spacing.iconButton),
         ) {
@@ -110,8 +110,8 @@ fun RecipeSearchBar(
             IconButton(
                 onClick = onFilterClick,
                 colors = IconButtonDefaults.iconButtonColors(
-                    containerColor = BrandGreen,
-                    contentColor = TextOnGreen,
+                    containerColor = colors.primary,
+                    contentColor = colors.onPrimary,
                 ),
                 modifier = Modifier.size(Spacing.iconButton),
             ) {
@@ -125,7 +125,7 @@ fun RecipeSearchBar(
                     modifier = Modifier
                         .align(Alignment.TopEnd)
                         .offset(x = (-2).dp, y = 2.dp),
-                    containerColor = MaterialTheme.colorScheme.error,
+                    containerColor = colors.error,
                 ) {
                     Text(activeFilterCount.toString())
                 }

@@ -48,13 +48,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.tharsis.recipebox.R
-import com.tharsis.recipebox.ui.theme.BrandGreen
-import com.tharsis.recipebox.ui.theme.BrandGreenSoft
 import com.tharsis.recipebox.ui.theme.RecipeBoxTheme
 import com.tharsis.recipebox.ui.theme.Spacing
-import com.tharsis.recipebox.ui.theme.TextOnGreen
-import com.tharsis.recipebox.ui.theme.TextPrimary
-import com.tharsis.recipebox.ui.theme.TextSecondary
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withTimeoutOrNull
 
@@ -128,12 +123,12 @@ fun FilterSheetContent(
                 text = stringResource(R.string.filter_title),
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
-                color = TextPrimary,
+                color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f),
             )
             if (filters.hasAny) {
                 TextButton(onClick = onClearAll) {
-                    Text(stringResource(R.string.filter_clear), color = BrandGreen)
+                    Text(stringResource(R.string.filter_clear), color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
@@ -213,8 +208,8 @@ fun FilterSheetContent(
                 .height(Spacing.filterButtonHeight),
             shape = RoundedCornerShape(Spacing.cardRadius),
             colors = ButtonDefaults.buttonColors(
-                containerColor = BrandGreen,
-                contentColor = TextOnGreen,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
             ),
         ) {
             Text(stringResource(R.string.filter_apply), fontWeight = FontWeight.SemiBold)
@@ -230,7 +225,7 @@ private fun FilterSection(title: String, content: @Composable () -> Unit) {
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         FlowRow(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -250,13 +245,13 @@ private fun FilterChoiceChip(label: String, selected: Boolean, onClick: () -> Un
         shape = ChipShape,
         border = BorderStroke(
             width = 1.dp,
-            color = if (selected) BrandGreen else BrandGreenSoft,
+            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
         ),
         colors = FilterChipDefaults.filterChipColors(
             containerColor = MaterialTheme.colorScheme.surface,
-            labelColor = BrandGreen,
-            selectedContainerColor = BrandGreen,
-            selectedLabelColor = TextOnGreen,
+            labelColor = MaterialTheme.colorScheme.primary,
+            selectedContainerColor = MaterialTheme.colorScheme.primary,
+            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
         ),
     )
 }
@@ -290,20 +285,20 @@ private fun IngredientChipEditor(
             text = title,
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold,
-            color = TextPrimary,
+            color = MaterialTheme.colorScheme.onSurface,
         )
         OutlinedTextField(
             value = text,
             onValueChange = { text = it },
             modifier = Modifier.fillMaxWidth(),
             singleLine = true,
-            placeholder = { Text(hint, color = TextSecondary) },
+            placeholder = { Text(hint, color = MaterialTheme.colorScheme.onSurfaceVariant) },
             trailingIcon = {
                 IconButton(onClick = { commit() }) {
                     Icon(
                         Icons.Filled.Add,
                         contentDescription = stringResource(R.string.cd_add_ingredient),
-                        tint = BrandGreen,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             },
@@ -311,9 +306,9 @@ private fun IngredientChipEditor(
             keyboardActions = KeyboardActions(onDone = { commit() }),
             shape = RoundedCornerShape(Spacing.cardRadius),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = BrandGreen,
-                unfocusedBorderColor = BrandGreenSoft,
-                cursorColor = BrandGreen,
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
+                cursorColor = MaterialTheme.colorScheme.primary,
             ),
         )
         if (ingredients.isNotEmpty()) {
@@ -337,9 +332,9 @@ private fun IngredientChipEditor(
                         },
                         shape = ChipShape,
                         colors = InputChipDefaults.inputChipColors(
-                            selectedContainerColor = BrandGreen,
-                            selectedLabelColor = TextOnGreen,
-                            selectedTrailingIconColor = TextOnGreen,
+                            selectedContainerColor = MaterialTheme.colorScheme.primary,
+                            selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+                            selectedTrailingIconColor = MaterialTheme.colorScheme.onPrimary,
                         ),
                     )
                 }

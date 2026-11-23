@@ -6,7 +6,7 @@ import coil3.SingletonImageLoader
 import coil3.disk.DiskCache
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
-import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.di.appModule
 import okio.Path.Companion.toOkioPath
 import org.koin.android.ext.koin.androidContext

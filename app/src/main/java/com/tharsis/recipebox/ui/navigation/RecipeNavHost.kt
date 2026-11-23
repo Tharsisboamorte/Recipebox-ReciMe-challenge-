@@ -12,7 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.tharsis.recipebox.core.config.AppConfig
+import com.tharsis.recipebox.core.AppConfig
 import com.tharsis.recipebox.ui.detail.RecipeDetailRoute
 import com.tharsis.recipebox.ui.list.RecipeListRoute
 
