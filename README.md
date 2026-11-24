@@ -22,16 +22,16 @@ A native Android app for browsing, searching, and filtering cooking recipes, bui
 - Full-text search across recipe **titles, descriptions, and cooking instructions**.
 - Filters:
   - Vegetarian only
-  - Servings range (min/max)
+  - Servings presets (Any, 1–2, 3–4, 5+)
   - Must-include ingredients
   - Must-not-include ingredients
 - Detail screen with hero image, dietary chips, sticky **Ingredients / Instructions** switcher, and compact list rows.
 - **Offline-first**: recipe JSON is cached to disk after the first load; food photos are bundled in `assets/images/` so the app works without network.
-- Smooth motion: shared-element transition from list card to detail, crossfading images, and animated layout changes as filters update.
+- Smooth motion: shared-element transition from list card to detail, crossfading images, and animated grid ↔ list layout changes.
 
 ## Setup
 
-Requirements: Android Studio (latest stable) with **JDK 11+** and an Android SDK that includes **API 37**.
+Requirements: Android Studio (latest stable) with **JDK 17+** (this project’s Gradle daemon toolchain is **21**) and an Android SDK that includes **API 37**. App bytecode targets Java 11.
 
 ```bash
 # Build a debug APK
@@ -84,12 +84,13 @@ No use-case layer — intentional for a small catalog (same stance as Now in And
 
 - **Clean-ish dependency rule.** UI depends on `domain`; `data` implements domain contracts and owns DTOs/mappers.
 - **Intent / UiState / SideEffect.** UI events enter via sealed intents; navigation leaves as one-shot side effects so the ViewModel stays free of `NavController`.
-- **No hardcoded UI copy / magic numbers.** User-facing strings live in `strings.xml`; spacing in `Spacing`; knobs in `AppConfig`.
+- **Prefer `strings.xml` / `Spacing` / `AppConfig`.** Most UI copy and design tokens live there; a few ViewModel error fallbacks and local `dp` values remain inline.
 - **Koin for DI.** Detail ViewModel receives recipe id as a constructor parameter from navigation.
-- **Pure `RecipeCatalogFilter` in domain.** Unit-tested search semantics, identical to what a server-side filter would do.
+- **Pure `RecipeCatalogFilter` in domain** (distinct from UI `RecipeFilters`). Unit-tested search semantics, identical to what a server-side filter would do.
 - **Coil 3** + bundled `imageAsset` photos (offline). Memory cache only — no Coil disk cache, because assets are already on device.
 - **Recipe catalog disk cache** warms once per process via `RecipeDiskCache` so a failed re-read of assets can still serve the last good catalog.
 - **R8 for release** builds.
+- **Spotless + ktlint** on `*.kt` / `*.kts` (root `build.gradle.kts`).
 - **Always-light Material 3 theme** with brand green (`#129575`).
 
 ## Filter semantics
@@ -97,7 +98,7 @@ No use-case layer — intentional for a small catalog (same stance as Now in And
 - **Text**: case-insensitive substring match against title + description + instructions.
 - **Include ingredients**: a recipe must contain **all** listed ingredients (substring match).
 - **Exclude ingredients**: a recipe must contain **none** of the listed ingredients.
-- **Servings**: inclusive `min`/`max`. A full-range slider (1–12) means "no servings filter".
+- **Servings**: inclusive `min`/`max` in the domain query. The UI exposes presets (Any / 1–2 / 3–4 / 5+) that set those bounds; **Any** clears both to `null` (no servings filter).
 - Multiple filters combine with **AND** semantics.
 
 ## Assumptions and tradeoffs
@@ -119,4 +120,4 @@ No use-case layer — intentional for a small catalog (same stance as Now in And
 
 ## Tech stack
 
-Kotlin · Jetpack Compose (Material 3) · Koin · kotlinx.serialization · Coroutines/Flow · Navigation Compose · Coil 3
+Kotlin · Jetpack Compose (Material 3) · Koin · kotlinx.serialization · Coroutines/Flow · Navigation Compose · Coil 3 · Spotless/ktlint
